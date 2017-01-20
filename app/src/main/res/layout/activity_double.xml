@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_crop"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="true"
+    android:orientation="vertical"
+    tools:context="com.noah.photonext.activity.CropActivity">
+
+    <include layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/edit_background_color"
+        android:clipChildren="true">
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/navigation_bar" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/linearLayout2"
+            android:gravity="center">
+
+
+
+            <ImageView
+                android:id="@+id/double_main_iv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <ImageView
+                android:id="@+id/double_top_iv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:id="@+id/double_pick_photo_iv"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/add_photo" />
+            <TextView
+                android:id="@+id/adjustment_seekbar_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:text="0"
+                android:textColor="@android:color/white"
+                android:textSize="30sp"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_second_height"
+            android:layout_above="@+id/include"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:clipChildren="true"
+            android:orientation="horizontal">
+
+            <com.noah.photonext.custom.LLayout
+                android:id="@+id/double_browse"
+                android:layout_width="@dimen/bottom_bar_second_height"
+                android:layout_height="@dimen/bottom_bar_second_height"
+                app:icon="@mipmap/ic_brushes_brighten"
+                app:text="@string/double_browse" />
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bottom_bar_second_height">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/bottom_bar_second_height"
+                    android:orientation="horizontal">
+
+                    <com.noah.photonext.custom.LLayout
+                        android:id="@+id/double_normal"
+                        android:layout_width="@dimen/bottom_bar_second_height"
+                        android:layout_height="@dimen/bottom_bar_second_height"
+                        app:icon="@mipmap/ic_tools_adjustment_exposure"
+                        app:text="@string/double_normal" />
+
+                    <com.noah.photonext.custom.LLayout
+                        android:id="@+id/double_white"
+                        android:layout_width="@dimen/bottom_bar_second_height"
+                        android:layout_height="@dimen/bottom_bar_second_height"
+                        app:icon="@mipmap/ic_tools_adjustment_temperature"
+                        app:text= "@string/double_white_background" />
+
+                    <com.noah.photonext.custom.LLayout
+                        android:id="@+id/double_black"
+                        android:layout_width="@dimen/bottom_bar_second_height"
+                        android:layout_height="@dimen/bottom_bar_second_height"
+                        app:icon="@mipmap/ic_tools_adjustment_contrast"
+                        app:text="@string/double_black_background" />
+
+                    <com.noah.photonext.custom.LLayout
+                        android:id="@+id/adjustment_brightness"
+                        android:layout_width="@dimen/bottom_bar_second_height"
+                        android:layout_height="@dimen/bottom_bar_second_height"
+                        app:icon="@mipmap/ic_tools_adjustment_brightness"
+                        app:text="@string/adjustment_brightness" />
+
+                    <com.noah.photonext.custom.LLayout
+                        android:id="@+id/adjustment_vibrance"
+                        android:layout_width="@dimen/bottom_bar_second_height"
+                        android:layout_height="@dimen/bottom_bar_second_height"
+                        app:icon="@mipmap/ic_tools_adjustment_vibrance"
+                        app:text="@string/adjustment_vibrance" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

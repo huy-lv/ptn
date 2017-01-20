@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <com.noah.photonext.custom.SquareLayout
+            android:id="@+id/collage_square_layout"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/white">
+
+            <FrameLayout
+                android:id="@+id/collage_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="#b9b9b9" >
+            </FrameLayout>
+        </com.noah.photonext.custom.SquareLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:id="@+id/collage_choose_layout_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_bar_icon_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/bt1" />
+
+                <View
+                    android:id="@+id/collage_indicator1"
+                    android:layout_width="40dp"
+                    android:layout_height="4dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/collage_padding_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_bar_icon_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@mipmap/bt2" />
+
+                <View
+                    android:id="@+id/collage_indicator2"
+                    android:layout_width="40dp"
+                    android:layout_height="4dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/collage_corner_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_bar_icon_height"
+                    android:layout_gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@mipmap/bt3"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+                <View
+                    android:id="@+id/collage_indicator3"
+                    android:layout_width="40dp"
+                    android:layout_height="4dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/collage_change_size_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_bar_icon_height"
+                    android:layout_gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@mipmap/bt4"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+                <View
+                    android:id="@+id/collage_indicator4"
+                    android:layout_width="40dp"
+                    android:layout_height="4dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/collage_border_color_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bottom_bar_icon_height"
+                    android:layout_gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@mipmap/bt5"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+                <View
+                    android:id="@+id/collage_indicator5"
+                    android:layout_width="40dp"
+                    android:layout_height="4dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/white" />
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/bottom_bar_second1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
+            android:layout_above="@+id/bottom_bar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/choose_layout2_1"
+                        android:layout_width="@dimen/bottom_bar_icon_height"
+                        android:layout_height="@dimen/bottom_bar_icon_height"
+                        android:layout_margin="10dp"
+                        android:src="@mipmap/ic_layout2_1"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+
+                    <ImageView
+                        android:id="@+id/choose_layout3_1"
+                        android:layout_width="@dimen/bottom_bar_icon_height"
+                        android:layout_height="@dimen/bottom_bar_icon_height"
+                        android:layout_margin="10dp"
+                        android:src="@mipmap/ic_layout3_1"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+
+                    <ImageView
+                        android:id="@+id/choose_layout4_1"
+                        android:layout_width="@dimen/bottom_bar_icon_height"
+                        android:layout_height="@dimen/bottom_bar_icon_height"
+                        android:layout_margin="10dp"
+                        android:src="@mipmap/ic_layout4_1"
+                        android:background="?attr/selectableItemBackgroundBorderless"/>
+
+                    <ImageView
+                        android:id="@+id/choose_layout4_2"
+                        android:layout_width="@dimen/bottom_bar_icon_height"
+                        android:layout_height="@dimen/bottom_bar_icon_height"
+                        android:layout_margin="10dp"
+                        android:src="@mipmap/no_media"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+
+                    <ImageView
+                        android:layout_width="@dimen/bottom_bar_icon_height"
+                        android:layout_height="@dimen/bottom_bar_icon_height"
+                        android:layout_margin="10dp"
+                        android:src="@mipmap/no_media"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+
+                    <ImageView
+                        android:layout_width="@dimen/bottom_bar_icon_height"
+                        android:layout_height="@dimen/bottom_bar_icon_height"
+                        android:layout_margin="10dp"
+                        android:src="@mipmap/no_media"
+                        android:background="?attr/selectableItemBackgroundBorderless"/>
+
+                    <ImageView
+                        android:layout_width="@dimen/bottom_bar_icon_height"
+                        android:layout_height="@dimen/bottom_bar_icon_height"
+                        android:layout_margin="10dp"
+                        android:src="@mipmap/no_media"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_bar_second2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
+            android:layout_above="@+id/bottom_bar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:visibility="gone">
+
+            <SeekBar
+                android:id="@+id/collage_padding_sb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_bar_second3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
+            android:layout_above="@+id/bottom_bar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:visibility="gone">
+
+            <SeekBar
+                android:id="@+id/collage_corner_sb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_bar_second4"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
+            android:layout_above="@+id/bottom_bar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:visibility="gone">
+
+            <SeekBar
+                android:id="@+id/collage_change_size_sb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="160"
+                android:progress="80" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

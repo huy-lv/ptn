@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TriangleView">
+        <attr name="tr_direction" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="up" value="1"/>
+            <enum name="right" value="2"/>
+            <enum name="down" value="3"/>
+        </attr>
+        <attr name="tr_color" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="PentagonIV">
+        <attr name="pen_range" format="dimension"/>
+        <attr name="pen_direction" format="enum">
+            <enum name="up" value="1"/>
+            <enum name="down" value="2"/>
+            <enum name="left" value="3"/>
+            <enum name="right" value="4"/>
+        </attr>
+        <attr name="pen_half" format="enum">
+            <enum name="up" value ="1"/>
+            <enum name="down" value="2"/>
+            <enum name="left" value="3"/>
+            <enum name="right" value="4"/>
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="RectangleIV">
+        <attr name="rect_corner" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="FixedAspectRatioFrameLayout">
+        <attr name="aspectRatioWidth" format="integer"/>
+        <attr name="aspectRatioHeight" format="integer"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="LLayout">
+        <attr name="icon" format="reference"/>
+        <attr name="text" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="StartSeekBar">
+        <attr name="startValue" format="float"/>
+        <attr name="minValue" format="float"/>
+        <attr name="maxValue" format="float"/>
+        <attr name="thumbDrawable" format="reference"/>
+        <attr name="thumbPressedDrawable" format="reference"/>
+        <attr name="defaultBackgroundColor" format="color"/>
+        <attr name="defaultBackgroundRangeColor" format="color"/>
+    </declare-styleable>
+</resources>

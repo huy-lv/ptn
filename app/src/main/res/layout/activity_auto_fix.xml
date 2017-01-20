@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/toolbar"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/edit_background_color">
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/navigation_bar" />
+
+        <com.imagezoom.ImageViewTouch
+            android:id="@+id/edit_main_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/no_media"
+            android:scaleType="centerInside"
+            android:layout_above="@+id/include" />
+    </RelativeLayout>
+</LinearLayout>

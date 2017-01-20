@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/toolbar"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/edit_background_color">
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/navigation_bar" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_second_height"
+            android:layout_above="@+id/include"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/horizontalScrollView">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/bottom_bar_second_height"
+                android:id="@+id/linearLayout2"
+                android:orientation="horizontal">
+                <com.noah.photonext.custom.LLayout
+                    android:id="@+id/adjustment_exposure"
+                    android:layout_width="@dimen/bottom_bar_second_height"
+                    android:layout_height="@dimen/bottom_bar_second_height"
+                    app:icon="@mipmap/ic_tools_adjustment_exposure"
+                    app:text="@string/adjustment_exposure"/>
+                <com.noah.photonext.custom.LLayout
+                    android:id="@+id/adjustment_temperature"
+                    android:layout_width="@dimen/bottom_bar_second_height"
+                    android:layout_height="@dimen/bottom_bar_second_height"
+                    app:icon="@mipmap/ic_tools_adjustment_temperature"
+                    app:text="@string/adjustment_temperature"/>
+                <com.noah.photonext.custom.LLayout
+                    android:id="@+id/adjustment_contrast"
+                    android:layout_width="@dimen/bottom_bar_second_height"
+                    android:layout_height="@dimen/bottom_bar_second_height"
+                    app:icon="@mipmap/ic_tools_adjustment_contrast"
+                    app:text="@string/adjustment_contrast"/>
+                <com.noah.photonext.custom.LLayout
+                    android:id="@+id/adjustment_brightness"
+                    android:layout_width="@dimen/bottom_bar_second_height"
+                    android:layout_height="@dimen/bottom_bar_second_height"
+                    app:icon="@mipmap/ic_tools_adjustment_brightness"
+                    app:text="@string/adjustment_brightness"/>
+                <com.noah.photonext.custom.LLayout
+                    android:id="@+id/adjustment_vibrance"
+                    android:layout_width="@dimen/bottom_bar_second_height"
+                    android:layout_height="@dimen/bottom_bar_second_height"
+                    app:icon="@mipmap/ic_tools_adjustment_vibrance"
+                    app:text="@string/adjustment_vibrance"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <com.imagezoom.ImageViewTouch
+            android:id="@+id/edit_main_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/no_media"
+            android:layout_above="@+id/horizontalScrollView" />
+
+        <TextView
+            android:text="0"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"
+            android:id="@+id/adjustment_seekbar_tv" />
+    </RelativeLayout>
+</LinearLayout>
