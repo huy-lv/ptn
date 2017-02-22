@@ -5,13 +5,7 @@
 #include <jni.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/core/utility.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/imgcodecs.hpp>
 #include <android/log.h>
-#include <string>
-#include <sstream>
 
 namespace patch
 {
@@ -360,8 +354,6 @@ void clearBackground(Mat m1,Mat &m2,Mat1b mask){
 void clearBackground2(Mat m1,Mat &m2,Mat1b mask) {
     m1.copyTo(m2);
     LOGE("m1 type %d m2 type %d", m1.type(), m2.type());
-//    cvtColor(m2,m2,CV_BGR2BGRA);
-//    LOGE("m1 type %d m2 type %d",m1.type(),m2.type());
 
     for (int y = 0; y < m1.rows; y++) {
         char s[1000] = "line ";
@@ -380,34 +372,36 @@ void clearBackground2(Mat m1,Mat &m2,Mat1b mask) {
 
 extern "C" {
 JNIEXPORT void JNICALL
-Java_com_noah_photonext_MainActivity_native_1clearBackground2(JNIEnv *env, jobject thiz,jlong self,jlong m_nativeObj){
-    Mat& srcMat = *((Mat*)self);
-    Mat& dstMat = *((Mat*)m_nativeObj);
+Java_com_noah_photonext_MainActivity_native_1clearBackground2(JNIEnv *env, jobject thiz, jlong self,
+                                                              jlong m_nativeObj) {
+    Mat &srcMat = *((Mat *) self);
+    Mat &dstMat = *((Mat *) m_nativeObj);
 
-    if(srcMat.type() == CV_8UC3) cvtColor(srcMat,srcMat,CV_BGR2BGRA);
+    if (srcMat.type() == CV_8UC3) cvtColor(srcMat, srcMat, CV_BGR2BGRA);
 
     srcMat.copyTo(dstMat);
-    Scalar chroma( 255, 255, 255, 255 );
+    Scalar chroma(255, 255, 255, 255);
     double tInner = 21;
     double tOuter = 22;
     Mat1b mask = chromaKey(srcMat, chroma, tInner, tOuter);
-    clearBackground2(srcMat,dstMat,mask);
+    clearBackground2(srcMat, dstMat, mask);
 }
 JNIEXPORT void JNICALL
-Java_com_noah_photonext_MainActivity_native_1clearBackground(JNIEnv *env, jobject thiz,jlong self,jlong m_nativeObj){
-    Mat& srcMat = *((Mat*)self);
-    Mat& dstMat = *((Mat*)m_nativeObj);
+Java_com_noah_photonext_MainActivity_native_1clearBackground(JNIEnv *env, jobject thiz, jlong self,
+                                                             jlong m_nativeObj) {
+    Mat &srcMat = *((Mat *) self);
+    Mat &dstMat = *((Mat *) m_nativeObj);
 
-    if(srcMat.type() == CV_8UC3) cvtColor(srcMat,srcMat,CV_BGR2BGRA);
+    if (srcMat.type() == CV_8UC3) cvtColor(srcMat, srcMat, CV_BGR2BGRA);
 
 //    LOGE("mat type: %d",srcMat.type());
 
     srcMat.copyTo(dstMat);
-    Scalar chroma( 255, 255, 255, 255 );
+    Scalar chroma(255, 255, 255, 255);
     double tInner = 21;
     double tOuter = 22;
     Mat1b mask = chromaKey(srcMat, chroma, tInner, tOuter);
-    clearBackground(srcMat,dstMat,mask);
+    clearBackground(srcMat, dstMat, mask);
 //    for(int i=0;i<10;i++){
 //        Vec4b s = dstMat.at<Vec4b>(0,i);
 //        int r = s[0];
@@ -418,80 +412,121 @@ Java_com_noah_photonext_MainActivity_native_1clearBackground(JNIEnv *env, jobjec
 //    }
 }
 JNIEXPORT void JNICALL
-Java_com_noah_photonext_MainActivity_native_1adjustMat(JNIEnv *env, jobject thiz,jlong self,jlong m_nativeObj, jfloat exp,jint temp,jfloat cont,jint bri,jint vib){
-    Mat& srcMat = *((Mat*)self);
-    Mat& dstMat = *((Mat*)m_nativeObj);
+Java_com_noah_photonext_MainActivity_native_1adjustMat(JNIEnv *env, jobject thiz, jlong self,
+                                                       jlong m_nativeObj, jfloat exp, jint temp,
+                                                       jfloat cont, jint bri, jint vib) {
+    Mat &srcMat = *((Mat *) self);
+    Mat &dstMat = *((Mat *) m_nativeObj);
 
-    CV_Assert(((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
-    &&((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) || (dstMat.type() == CV_8UC4)) );
+    CV_Assert(
+            ((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
+            && ((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) ||
+                (dstMat.type() == CV_8UC4)));
     CV_Assert(srcMat.type() == dstMat.type());
 
-    adjustMat(srcMat,dstMat,exp,temp,cont,bri,vib);
+    adjustMat(srcMat, dstMat, exp, temp, cont, bri, vib);
 }
 JNIEXPORT void JNICALL
-Java_com_noah_photonext_MainActivity_native_1adjustVibrance(JNIEnv *env, jobject thiz,jlong self,jlong m_nativeObj, jint adjustValue){
-    Mat& srcMat = *((Mat*)self);
-    Mat& dstMat = *((Mat*)m_nativeObj);
+Java_com_noah_photonext_MainActivity_native_1adjustVibrance(JNIEnv *env, jobject thiz, jlong self,
+                                                            jlong m_nativeObj, jint adjustValue) {
+    Mat &srcMat = *((Mat *) self);
+    Mat &dstMat = *((Mat *) m_nativeObj);
 
-    CV_Assert(adjustValue >= -100 && adjustValue<=100);
-    CV_Assert(((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
-    &&((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) || (dstMat.type() == CV_8UC4)) );
+    CV_Assert(adjustValue >= -100 && adjustValue <= 100);
+    CV_Assert(
+            ((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
+            && ((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) ||
+                (dstMat.type() == CV_8UC4)));
     CV_Assert(srcMat.type() == dstMat.type());
 
-    adjustVibrance(srcMat,dstMat,adjustValue);
+    adjustVibrance(srcMat, dstMat, adjustValue);
 }
 JNIEXPORT void JNICALL
-Java_com_noah_photonext_MainActivity_native_1adjustContrast(JNIEnv *env, jobject thiz,jlong self,jlong m_nativeObj, jfloat adjustValue,jint beta){
-    Mat& srcMat = *((Mat*)self);
-    Mat& dstMat = *((Mat*)m_nativeObj);
+Java_com_noah_photonext_MainActivity_native_1adjustContrast(JNIEnv *env, jobject thiz, jlong self,
+                                                            jlong m_nativeObj, jfloat adjustValue,
+                                                            jint beta) {
+    Mat &srcMat = *((Mat *) self);
+    Mat &dstMat = *((Mat *) m_nativeObj);
 
-    CV_Assert(adjustValue >= -100 && adjustValue<=100);
-    CV_Assert(((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
-    &&((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) || (dstMat.type() == CV_8UC4)) );
+    CV_Assert(adjustValue >= -100 && adjustValue <= 100);
+    CV_Assert(
+            ((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
+            && ((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) ||
+                (dstMat.type() == CV_8UC4)));
     CV_Assert(srcMat.type() == dstMat.type());
 
-    convertTo2(srcMat,dstMat,adjustValue,beta);
+    convertTo2(srcMat, dstMat, adjustValue, beta);
 }
 JNIEXPORT void JNICALL
-Java_com_noah_photonext_MainActivity_native_1adjustTemperature(JNIEnv *env, jobject thiz,jlong self,jlong m_nativeObj, jint adjustValue){
-    Mat& srcMat = *((Mat*)self);
-    Mat& dstMat = *((Mat*)m_nativeObj);
+Java_com_noah_photonext_MainActivity_native_1adjustTemperature(JNIEnv *env, jobject thiz,
+                                                               jlong self, jlong m_nativeObj,
+                                                               jint adjustValue) {
+    Mat &srcMat = *((Mat *) self);
+    Mat &dstMat = *((Mat *) m_nativeObj);
 
-    CV_Assert(adjustValue >= -100 && adjustValue<=100);
-    CV_Assert(((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
-        &&((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) || (dstMat.type() == CV_8UC4)) );
+    CV_Assert(adjustValue >= -100 && adjustValue <= 100);
+    CV_Assert(
+            ((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
+            && ((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) ||
+                (dstMat.type() == CV_8UC4)));
     CV_Assert(srcMat.type() == dstMat.type());
 
 //    LOGE("w %d h %d type %d %d",srcMat.rows,srcMat.cols ,srcMat.type() , dstMat.type());
-    adjustTemperature(srcMat,dstMat,adjustValue);
+    adjustTemperature(srcMat, dstMat, adjustValue);
 }
 
 JNIEXPORT void JNICALL
-Java_com_noah_photonext_MainActivity_native_1adjustBrightness(JNIEnv *env, jobject thiz,jlong self,jlong m_nativeObj, jfloat alpha ,jint beta){
-    Mat& srcMat = *((Mat*)self);
-    Mat& dstMat = *((Mat*)m_nativeObj);
+Java_com_noah_photonext_MainActivity_native_1adjustBrightness(JNIEnv *env, jobject thiz, jlong self,
+                                                              jlong m_nativeObj, jfloat alpha,
+                                                              jint beta) {
+    Mat &srcMat = *((Mat *) self);
+    Mat &dstMat = *((Mat *) m_nativeObj);
 
-    CV_Assert(((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
-    &&((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) || (dstMat.type() == CV_8UC4)) );
+    CV_Assert(
+            ((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4))
+            && ((dstMat.type() == CV_8UC1) || (dstMat.type() == CV_8UC3) ||
+                (dstMat.type() == CV_8UC4)));
     CV_Assert(srcMat.type() == dstMat.type());
 
     //    LOGE("w %d h %d type %d %d",srcMat.rows,srcMat.cols ,srcMat.type() , dstMat.type());
-    srcMat.convertTo(dstMat,-1,alpha,beta);
+    srcMat.convertTo(dstMat, -1, alpha, beta);
 }
 
 JNIEXPORT jstring JNICALL
 Java_com_noah_photonext_MainActivity_getStringFrom(JNIEnv *env, jobject instance) {
-    return env->NewStringUTF( "ret urnValue");
+    return env->NewStringUTF("ret urnValue");
 }
 JNIEXPORT void JNICALL
-Java_com_noah_photonext_MainActivity_native_1autofix(JNIEnv *env, jobject thiz,jlong self,jlong m_nativeObj, jfloat clip){
-    Mat& srcMat = *((Mat*)self);
-    Mat& m = *((Mat*)m_nativeObj);
+Java_com_noah_photonext_MainActivity_native_1autofix(JNIEnv *env, jobject thiz, jlong self,
+                                                     jlong m_nativeObj, jfloat clip) {
+    Mat &srcMat = *((Mat *) self);
+    Mat &m = *((Mat *) m_nativeObj);
 
     CV_Assert(clip >= 0);
-    CV_Assert((srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4));
+    CV_Assert(
+            (srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4));
 
-    autofix(srcMat,m,clip);
+    autofix(srcMat, m, clip);
 }
+JNIEXPORT void JNICALL
+Java_com_noah_photonext_MainActivity_native_1stack_1blur(JNIEnv *env, jobject thiz, jlong self,
+                                                         jlong m_nativeObj, jint dotx, jint doty,
+                                                         jint distance1, jint distance2) {
+    Mat &srcMat = *((Mat *) self);
+    Mat &m = *((Mat *) m_nativeObj);
+
+    CV_Assert(distance1 >= 0 & dotx > 0 && doty > 0 & distance2 > 0);
+    CV_Assert(
+            (srcMat.type() == CV_8UC1) || (srcMat.type() == CV_8UC3) || (srcMat.type() == CV_8UC4));
+
+    int h = srcMat.rows;
+    int w = srcMat.cols;
+    Mat p1 = srcMat(Rect(0, 0, w, doty - distance1 - distance2));
+    Mat p1_blur = Mat();
+    GaussianBlur(p1, p1_blur, Size(3, 3), 0);
+
+
+}
+
 
 }

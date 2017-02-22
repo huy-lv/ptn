@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 
-import com.imagezoom.ImageViewTouchBase;
 import com.noah.photonext.R;
 import com.noah.photonext.base.BaseEditActivity;
 import com.noah.photonext.custom.SMat;
@@ -33,7 +32,6 @@ public class AutoFixActivity extends BaseEditActivity {
 
         Utils.matToBitmap(mat2, tempBitmap);
         edit_main_iv.setImageBitmap(tempBitmap);
-        edit_main_iv.setDisplayType(ImageViewTouchBase.DisplayType.FIT_IF_BIGGER);
     }
 
     @Override

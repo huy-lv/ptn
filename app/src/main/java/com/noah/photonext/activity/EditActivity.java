@@ -103,14 +103,13 @@ public class EditActivity extends BaseActivityToolbar implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        edit_main_iv.setDisplayType(ImageViewTouchBase.DisplayType.FIT_IF_BIGGER);
+        edit_main_iv.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         Intent i = getIntent();
         if (i != null) {
             if (i.hasExtra(INTENT_KEY_PICK_ONE_EDIT)) {//edit one photo
-
                 currentImagePath = getIntent().getStringExtra(INTENT_KEY_PICK_ONE_EDIT);
 
-                Picasso.with(this).load(PREPATH + currentImagePath).into(edit_main_iv);
+                Picasso.with(this).load(PREPATH + currentImagePath)/*.centerInside()*/.into(edit_main_iv);
                 currentBitmap = Utils.fixRotateBitmap(currentImagePath);
                 historyBitmaps.add(currentBitmap);
             } else {//edit in collage
@@ -279,6 +278,11 @@ public class EditActivity extends BaseActivityToolbar implements View.OnClickLis
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onClickNext() {
+        startActivityForResult(new Intent(this, BlurActivity.class), Utils.REQUEST_CODE_BLUR);
     }
 
     @Override

@@ -84,6 +84,11 @@ public abstract class BaseActivityToolbar extends BaseActivity implements View.O
         toolbar_title_tv.setGravity(Gravity.CENTER);
     }
 
+    protected void showToolbarButton() {
+        toolbar_back_iv.setVisibility(View.VISIBLE);
+        toolbar_next_iv.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){

@@ -27,6 +27,11 @@ android {
         commandLine 'C:/android-sdk-windows/ndk-bundle', '-C', file('src/main/jni').absolutePath
     }
 
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
+    }
 }
 
 dependencies {

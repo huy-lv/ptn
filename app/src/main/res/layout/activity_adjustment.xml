@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <include layout="@layout/toolbar"/>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,16 +15,16 @@
             layout="@layout/navigation_bar" />
 
         <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_bar_second_height"
             android:layout_above="@+id/include"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/horizontalScrollView">
+            android:layout_alignParentStart="true">
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/bottom_bar_second_height"
-                android:id="@+id/linearLayout2"
                 android:orientation="horizontal">
                 <com.noah.photonext.custom.LLayout
                     android:id="@+id/adjustment_exposure"
@@ -63,19 +63,19 @@
             android:id="@+id/edit_main_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@mipmap/no_media"
-            android:layout_above="@+id/horizontalScrollView" />
+            android:layout_above="@+id/horizontalScrollView"
+            android:src="@mipmap/s3" />
 
         <TextView
-            android:text="0"
-            android:visibility="invisible"
+            android:id="@+id/adjustment_seekbar_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
-            android:textSize="30sp"
+            android:text="0"
             android:textColor="@android:color/white"
-            android:id="@+id/adjustment_seekbar_tv" />
+            android:textSize="30sp"
+            android:visibility="invisible" />
     </RelativeLayout>
 </LinearLayout>

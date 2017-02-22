@@ -21,7 +21,8 @@
             android:id="@+id/include"
             layout="@layout/navigation_bar" />
 
-        <RelativeLayout
+        <FrameLayout
+            android:id="@+id/blur_root_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/linearLayout2"
@@ -31,20 +32,76 @@
                 android:id="@+id/edit_main_iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitCenter"
-                />
+                android:scaleType="fitCenter" />
+
+            <com.noah.photonext.custom.EView
+                android:id="@+id/edit_draw"
+                android:layout_width="1000dp"
+                android:layout_height="1000dp"
+                android:clickable="true"
+                android:visibility="invisible" />
+
+            <FrameLayout
+                android:id="@+id/blur_control_background"
+                android:layout_width="1000dp"
+                android:layout_height="1000dp"
+                android:clickable="true">
+
+                <FrameLayout
+                    android:id="@+id/blur_control"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="200dp">
+
+                    <ImageView
+                        android:id="@+id/blur_control_dash1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="10px"
+                        android:src="@mipmap/control3" />
+
+                    <ImageView
+                        android:id="@+id/blur_control_line1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="10px"
+                        android:layout_marginTop="60px"
+                        android:src="@mipmap/control2" />
+
+                    <ImageView
+                        android:id="@+id/blur_control_dot"
+                        android:layout_width="40px"
+                        android:layout_height="40px"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/control1" />
+
+                    <ImageView
+                        android:id="@+id/blur_control_line2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="10px"
+                        android:layout_marginTop="170px"
+                        android:src="@mipmap/control2" />
+
+                    <ImageView
+                        android:id="@+id/blur_control_dash2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="10px"
+                        android:layout_marginTop="230px"
+                        android:src="@mipmap/control3" />
+                </FrameLayout>
+            </FrameLayout>
+
             <TextView
-                android:text="0"
-                android:visibility="invisible"
+                android:id="@+id/adjustment_seekbar_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:textSize="30sp"
+                android:text="0"
                 android:textColor="@android:color/white"
-                android:id="@+id/adjustment_seekbar_tv" />
-        </RelativeLayout>
+                android:textSize="30sp"
+                android:visibility="invisible" />
+
+
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout2"

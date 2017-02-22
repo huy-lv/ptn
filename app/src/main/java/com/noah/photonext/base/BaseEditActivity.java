@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.imagezoom.ImageViewTouch;
+import com.imagezoom.ImageViewTouchBase;
 import com.noah.photonext.R;
 import com.noah.photonext.custom.LLayout;
 import com.noah.photonext.custom.StartSeekBar;
@@ -23,18 +24,17 @@ import static com.noah.photonext.util.Utils.historyBitmaps;
 public abstract class BaseEditActivity extends BaseActivityToolbar{
     @BindView(R.id.navigation_slider)
     protected StartSeekBar navigation_seek_bar;
+    @BindView(R.id.adjustment_seekbar_tv)
+    @Nullable
+    protected TextView adjustment_slider_tv;
+    @Nullable
+    @BindView(R.id.edit_main_iv)
+    protected ImageViewTouch edit_main_iv;
+    protected StartSeekBar.OnSeekBarChangeListener seekBarListener;
     @BindView(R.id.navigation_cancel_iv)
     ImageView navigation_cancel_iv;
     @BindView(R.id.navigation_done_iv)
     ImageView navigation_done_iv;
-    @BindView(R.id.adjustment_seekbar_tv)
-    @Nullable
-    protected TextView adjustment_slider_tv;
-    @BindView(R.id.edit_main_iv)
-    @Nullable
-    protected ImageViewTouch edit_main_iv;
-    protected StartSeekBar.OnSeekBarChangeListener seekBarListener;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,9 @@ public abstract class BaseEditActivity extends BaseActivityToolbar{
             }
         };
         navigation_seek_bar.setOnSeekBarChangeListener(seekBarListener);
+
+        if (edit_main_iv != null)
+            edit_main_iv.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
     }
 
     protected void onSeekBarTracking(int value){
