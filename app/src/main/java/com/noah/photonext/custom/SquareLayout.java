@@ -30,6 +30,8 @@ public class SquareLayout extends FrameLayout {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+        if (widthMeasureSpec < heightMeasureSpec)
+            super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+        else super.onMeasure(heightMeasureSpec, heightMeasureSpec);
     }
 }

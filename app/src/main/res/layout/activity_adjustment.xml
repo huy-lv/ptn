@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,58 +11,28 @@
 
         <include
             android:id="@+id/include"
-            layout="@layout/navigation_bar" />
-
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView"
+            layout="@layout/navigation_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_bar_second_height"
-            android:layout_above="@+id/include"
+            android:layout_height="@dimen/sliding_bar_height"
+            android:layout_above="@+id/adjustment_rv"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/adjustment_rv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/bottom_bar_second_height"
-                android:orientation="horizontal">
-                <com.noah.photonext.custom.LLayout
-                    android:id="@+id/adjustment_exposure"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
-                    app:icon="@mipmap/ic_tools_adjustment_exposure"
-                    app:text="@string/adjustment_exposure"/>
-                <com.noah.photonext.custom.LLayout
-                    android:id="@+id/adjustment_temperature"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
-                    app:icon="@mipmap/ic_tools_adjustment_temperature"
-                    app:text="@string/adjustment_temperature"/>
-                <com.noah.photonext.custom.LLayout
-                    android:id="@+id/adjustment_contrast"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
-                    app:icon="@mipmap/ic_tools_adjustment_contrast"
-                    app:text="@string/adjustment_contrast"/>
-                <com.noah.photonext.custom.LLayout
-                    android:id="@+id/adjustment_brightness"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
-                    app:icon="@mipmap/ic_tools_adjustment_brightness"
-                    app:text="@string/adjustment_brightness"/>
-                <com.noah.photonext.custom.LLayout
-                    android:id="@+id/adjustment_vibrance"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
-                    app:icon="@mipmap/ic_tools_adjustment_vibrance"
-                    app:text="@string/adjustment_vibrance"/>
-            </LinearLayout>
-        </HorizontalScrollView>
+
+        </android.support.v7.widget.RecyclerView>
 
         <com.imagezoom.ImageViewTouch
             android:id="@+id/edit_main_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/horizontalScrollView"
+            android:layout_above="@+id/include"
             android:src="@mipmap/s3" />
 
         <TextView

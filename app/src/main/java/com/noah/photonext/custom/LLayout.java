@@ -2,6 +2,7 @@ package com.noah.photonext.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -22,8 +23,11 @@ import com.noah.photonext.R;
 
 public class LLayout extends LinearLayout {
 
+    public static float DEFAULT_ICON_SIZE = 100, DEFAULT_TEXT_SIZE = 12;
     ImageView iv;
     TextView tv;
+    float icon_size;
+    float text_size;
     private Drawable d;
     private CharSequence t;
     private Context context;
@@ -54,17 +58,18 @@ public class LLayout extends LinearLayout {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.LLayout);
             d = typedArray.getDrawable(R.styleable.LLayout_icon);
             t = typedArray.getText(R.styleable.LLayout_text);
+            icon_size = typedArray.getDimension(R.styleable.LLayout_icon_size, DEFAULT_ICON_SIZE);
+            text_size = typedArray.getDimension(R.styleable.LLayout_text_size, DEFAULT_TEXT_SIZE);
 
-            int ivW = (int) getResources().getDimension(R.dimen.bottom_bar_second_icon_height);
             iv = new ImageView(context);
-            LinearLayout.LayoutParams p = new LayoutParams(ivW,ivW);
+            LinearLayout.LayoutParams p = new LayoutParams((int) icon_size, (int) icon_size);
             iv.setLayoutParams(p);
             iv.setImageDrawable(d);
             addView(iv);
 
             tv = new FontText(context);
             tv.setText(t);
-            tv.setTextSize(12);
+            tv.setTextSize(text_size);
             addView(tv);
             typedArray.recycle();
         }
@@ -86,12 +91,24 @@ public class LLayout extends LinearLayout {
     }
 
     public void setSelected(){
-        iv.setColorFilter(ContextCompat.getColor(context,R.color.colorPrimary));
-        tv.setTextColor(ContextCompat.getColor(context,R.color.colorPrimary));
+        iv.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
+        tv.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
     }
 
     public void clearColor(){
         iv.setColorFilter(Color.WHITE);
         tv.setTextColor(Color.WHITE);
+    }
+
+    public void setIconImage(int resid) {
+        iv.setImageResource(resid);
+    }
+
+    public void setText(String text) {
+        tv.setText(text);
+    }
+
+    public void setImageBitmap(Bitmap bm) {
+        iv.setImageBitmap(bm);
     }
 }

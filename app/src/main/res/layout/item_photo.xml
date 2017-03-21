@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_photo_fl"
     android:layout_width="@dimen/gallery_item_size"
     android:layout_height="@dimen/gallery_item_size"
-    android:padding="10dp"
-    android:id="@+id/item_photo_fl"
-    >
+
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/item_photo_image"
@@ -13,14 +13,25 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/no_media" />
 
-    <CheckBox
-        android:layout_gravity="end|bottom"
+    <cn.refactor.library.SmoothCheckBox
         android:id="@+id/item_photo_checkbox"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:scaleX="1.4"
-        android:scaleY="1.4"
-        android:buttonTint="@color/colorAccent"
+        android:layout_gravity="end"
         android:clickable="false"
         />
+
+    <ImageView
+        android:id="@+id/item_photo_close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end"
+        android:src="@mipmap/ic_del_image"
+        android:visibility="gone" />
+    <!--<FrameLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:clickable="true">-->
+
+    <!--</FrameLayout>-->
 </FrameLayout>

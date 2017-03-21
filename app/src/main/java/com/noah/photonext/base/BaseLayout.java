@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public abstract class BaseLayout extends FrameLayout {
 
-    public ArrayList<ShapedImageView> currentIV;
+    public ArrayList<ShapedImageView> currentIVlist;
 
     public BaseLayout(Context context) {
         super(context);

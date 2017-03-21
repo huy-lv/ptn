@@ -11,27 +11,27 @@
     tools:context="com.noah.photonext.MainActivity">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/textView" />
+        android:text="Hello World!" />
 
     <Button
-        android:id="@+id/pickPhoto"
+        android:id="@+id/main_to_collage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Collage"
-        android:layout_marginTop="31dp"
-        android:layout_below="@+id/main_to_edit"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/main_to_edit"
+        android:layout_marginTop="31dp"
+        android:text="Collage" />
 
     <Button
         android:id="@+id/main_to_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="edit"
-        android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView"
+        android:text="edit" />
 </RelativeLayout>

@@ -2,7 +2,6 @@ package com.noah.photonext;
 
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.noah.photonext.activity.PickPhotoActivity;
 import com.noah.photonext.base.BaseActivity;
@@ -35,7 +34,7 @@ public class MainActivity extends BaseActivity {
         return R.layout.activity_main;
     }
 
-    @OnClick(R.id.pickPhoto)
+    @OnClick(R.id.main_to_collage)
     void pickPhoto(){
         startActivity(new Intent(this,PickPhotoActivity.class));
     }

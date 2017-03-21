@@ -3,28 +3,33 @@ package com.noah.photonext.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.imagezoom.ImageViewTouch;
 import com.imagezoom.ImageViewTouchBase;
 import com.noah.photonext.R;
+import com.noah.photonext.adapter.EditToolAdapter;
+import com.noah.photonext.adapter.EffectToolAdapter;
 import com.noah.photonext.base.BaseActivityToolbar;
-import com.noah.photonext.custom.LLayout;
+import com.noah.photonext.model.EditToolObject;
+import com.noah.photonext.model.EffectToolObject;
 import com.noah.photonext.util.Utils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 
-import static com.noah.photonext.R.id.collage_indicator2;
-import static com.noah.photonext.R.id.collage_indicator3;
-import static com.noah.photonext.R.id.collage_indicator4;
-import static com.noah.photonext.R.id.collage_indicator5;
 import static com.noah.photonext.util.Utils.INTENT_KEY_PICK_ONE_EDIT;
 import static com.noah.photonext.util.Utils.PREPATH;
+import static com.noah.photonext.util.Utils.createEditToolList;
+import static com.noah.photonext.util.Utils.createEffectToolList;
 import static com.noah.photonext.util.Utils.currentBitmap;
 import static com.noah.photonext.util.Utils.currentHistoryPos;
 import static com.noah.photonext.util.Utils.historyBitmaps;
@@ -37,61 +42,46 @@ import static com.noah.photonext.util.Utils.historyBitmaps;
 public class EditActivity extends BaseActivityToolbar implements View.OnClickListener {
     @BindView(R.id.edit_main_iv)
     ImageViewTouch edit_main_iv;
+    @BindView(R.id.edit_tool_list)
+    LinearLayout edit_tool_list;
 
-    @BindView(R.id.bottom_bar_second1)
-    HorizontalScrollView bottom_bar_second1;
+    //tab1
     @BindView(R.id.edit_tool_iv)
     ImageView edit_tool_iv;
-    @BindView(R.id.collage_indicator1)
-    View collage_indicator1;
+    @BindView(R.id.edit_content_tool_1_rv)
+    RecyclerView edit_content_tool_1_rv;
+    EditToolAdapter editToolAdapter;
+    ArrayList<EditToolObject> editToolList;
 
+
+    //tab2
     @BindView(R.id.edit_brushes_iv)
     ImageView edit_brushes_iv;
-    @BindView(collage_indicator2)
-    View collageIndicator2;
+    @BindView(R.id.edit_content_tool_2_ll)
+    LinearLayout edit_content_tool_2_ll;
 
+    //tab3
     @BindView(R.id.edit_effect_iv)
     ImageView edit_effect_iv;
-    @BindView(collage_indicator3)
-    View collageIndicator3;
-
-    @BindView(R.id.edit_frame_iv)
-    ImageView edit_frame_iv;
-    @BindView(collage_indicator4)
-    View collageIndicator4;
-
+    @BindView(R.id.edit_content_tool_3_rv)
+    RecyclerView edit_content_tool_3_rv;
+    EffectToolAdapter effectToolAdapter;
+    //tab4
+    @BindView(R.id.edit_sticker_iv)
+    ImageView edit_sticker_iv;
+    @BindView(R.id.edit_content_tool_4_rv)
+    RecyclerView edit_content_tool_4_rv;
+    //tab5
     @BindView(R.id.edit_text_iv)
     ImageView edit_text_iv;
-    @BindView(collage_indicator5)
-    View collageIndicator5;
-
-    @BindView(R.id.edit_f1_crop)
-    LLayout edit_f1_crop;
-    @BindView(R.id.edit_f2_rotate)
-    LLayout edit_f2_rotate;
-    @BindView(R.id.edit_f3_double)
-    LLayout edit_f3_double;
-    @BindView(R.id.edit_f4_adjustment)
-    LLayout edit_f4_adjustment;
-    @BindView(R.id.edit_f5_autofix)
-    LLayout edit_f5_autofix;
-    @BindView(R.id.edit_f6_auto_contrast)
-    LLayout edit_f6_auto_contrast;
-    @BindView(R.id.edit_f7_blur)
-    LLayout edit_f7_blur;
-    @BindView(R.id.edit_f8_smooth)
-    LLayout edit_f8_smooth;
-    @BindView(R.id.edit_f9_sharpen)
-    LLayout edit_f9_sharpen;
-    @BindView(R.id.edit_f10_splash)
-    LLayout edit_f10_splash;
-
-    String currentImagePath;
-
+    @BindView(R.id.edit_content_tool_5_rv)
+    RecyclerView edit_content_tool_5_rv;
     @BindView(R.id.toolbar_undo_iv)
     ImageView toolbar_undo_iv;
     @BindView(R.id.toolbar_redo_iv)
     ImageView toolbar_redo_iv;
+    String currentImagePath;
+    private ArrayList<EffectToolObject> effectToolList;
 
     @Override
     protected int getLayoutId() {
@@ -112,7 +102,8 @@ public class EditActivity extends BaseActivityToolbar implements View.OnClickLis
                 Picasso.with(this).load(PREPATH + currentImagePath)/*.centerInside()*/.into(edit_main_iv);
                 currentBitmap = Utils.fixRotateBitmap(currentImagePath);
                 historyBitmaps.add(currentBitmap);
-            } else {//edit in collage
+            } else {//next from collage
+                edit_main_iv.setImageBitmap(currentBitmap);
             }
         } else {
             Log.e("cxz", "error");
@@ -122,20 +113,34 @@ public class EditActivity extends BaseActivityToolbar implements View.OnClickLis
         showHidePanel(-1);
 
         edit_tool_iv.setOnClickListener(this);
-        edit_f1_crop.setOnClickListener(this);
-        edit_f2_rotate.setOnClickListener(this);
-        edit_f3_double.setOnClickListener(this);
-        edit_f4_adjustment.setOnClickListener(this);
-        edit_f5_autofix.setOnClickListener(this);
-        edit_f6_auto_contrast.setOnClickListener(this);
-        edit_f7_blur.setOnClickListener(this);
-        edit_f8_smooth.setOnClickListener(this);
-        edit_f9_sharpen.setOnClickListener(this);
-        edit_f10_splash.setOnClickListener(this);
+        edit_brushes_iv.setOnClickListener(this);
+        edit_effect_iv.setOnClickListener(this);
+        edit_sticker_iv.setOnClickListener(this);
+        edit_text_iv.setOnClickListener(this);
 
         toolbar_undo_iv.setOnClickListener(this);
         toolbar_redo_iv.setOnClickListener(this);
+
+
+        //tab1 edit tool
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.HORIZONTAL, false);
+        edit_content_tool_1_rv.setLayoutManager(gridLayoutManager);
+        editToolList = createEditToolList(getResources());
+        editToolAdapter = new EditToolAdapter(this, editToolList);
+        edit_content_tool_1_rv.setAdapter(editToolAdapter);
+
+        //tab2 brush
+
+
+        //effect tab
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        edit_content_tool_3_rv.setLayoutManager(linearLayoutManager);
+        effectToolList = createEffectToolList(getResources());
+        effectToolAdapter = new EffectToolAdapter(this, effectToolList);
+        edit_content_tool_3_rv.setAdapter(effectToolAdapter);
+
     }
+
 
     @Override
     public void onClick(View v) {
@@ -170,44 +175,32 @@ public class EditActivity extends BaseActivityToolbar implements View.OnClickLis
             case R.id.edit_effect_iv:
                 showHidePanel(2);
                 break;
-            case R.id.edit_frame_iv:
+            case R.id.edit_sticker_iv:
                 showHidePanel(3);
                 break;
             case R.id.edit_text_iv:
                 showHidePanel(4);
                 break;
-            case R.id.edit_f1_crop:
-                startActivityForResult(new Intent(this, CropActivity.class), Utils.REQUEST_CODE_CROP);
-                break;
-            case R.id.edit_f2_rotate:
-                startActivityForResult(new Intent(this, RotateActivity.class), Utils.REQUEST_CODE_ROTATE);
-                break;
-            case R.id.edit_f3_double:
-                startActivityForResult(new Intent(this, DoubleActivity.class), Utils.REQUEST_CODE_ROTATE);
-                break;
-            case R.id.edit_f4_adjustment:
-                startActivityForResult(new Intent(this, AdjustmentActivity.class), Utils.REQUEST_CODE_ADJUSTMENT);
-                break;
-            case R.id.edit_f5_autofix:
-                startActivityForResult(new Intent(this, AutoFixActivity.class), Utils.REQUEST_CODE_AUTOFIX);
-                break;
-            case R.id.edit_f6_auto_contrast:
-                Toast.makeText(this,"Coming soon",Toast.LENGTH_SHORT).show();
-//                startActivityForResult(new Intent(this, AutoContrastActivity.class), Utils.REQUEST_CODE_AUTOCONTRAST);
-                break;
-            case R.id.edit_f7_blur:
-                startActivityForResult(new Intent(this, BlurActivity.class), Utils.REQUEST_CODE_BLUR);
-                break;
-            case R.id.edit_f8_smooth:
-                startActivityForResult(new Intent(this, SmoothActivity.class), Utils.REQUEST_CODE_AUTOFIX);
-                break;
-            case R.id.edit_f9_sharpen:
-                startActivityForResult(new Intent(this, SharpenActivity.class), Utils.REQUEST_CODE_AUTOFIX);
-                break;
-            case R.id.edit_f10_splash:
-                startActivityForResult(new Intent(this, SharpenActivity.class), Utils.REQUEST_CODE_AUTOFIX);
-                break;
-
+//            case R.id.edit_effect_group1:
+//                reselect(0);
+//                edit_viewpager_effect_group.setCurrentItem(0,true);
+//                break;
+//            case R.id.edit_effect_group2:
+//                reselect(1);
+//                edit_viewpager_effect_group.setCurrentItem(1,true);
+//                break;
+//            case R.id.edit_effect_group3:
+//                reselect(2);
+//                edit_viewpager_effect_group.setCurrentItem(2,true);
+//                break;
+//            case R.id.edit_effect_group4:
+//                reselect(3);
+//                edit_viewpager_effect_group.setCurrentItem(3,true);
+//                break;
+//            case R.id.edit_effect_group5:
+//                reselect(4);
+//                edit_viewpager_effect_group.setCurrentItem(4,true);
+//                break;
         }
     }
 
@@ -248,15 +241,16 @@ public class EditActivity extends BaseActivityToolbar implements View.OnClickLis
     }
 
     void showHidePanel(int n) {
-        bottom_bar_second1.setVisibility(n == 0 ? View.VISIBLE : View.GONE);
-        collage_indicator1.setVisibility(n == 0 ? View.VISIBLE : View.GONE);
-//        bottom_bar_second2.setVisibility(n == 1 ? View.VISIBLE : View.GONE);
-//        collage_indicator2.setVisibility(n == 1 ? View.VISIBLE : View.GONE);
-//        bottom_bar_second3.setVisibility(n == 2 ? View.VISIBLE : View.GONE);
-//        collage_indicator3.setVisibility(n == 2 ? View.VISIBLE : View.GONE);
-//        bottom_bar_second4.setVisibility(n == 3 ? View.VISIBLE : View.GONE);
-//        collage_indicator4.setVisibility(n == 3 ? View.VISIBLE : View.GONE);
-//        collage_indicator5.setVisibility(n == 4 ? View.VISIBLE : View.GONE);
+        edit_content_tool_1_rv.setVisibility(n == 0 ? View.VISIBLE : View.GONE);
+        edit_tool_iv.setImageResource(n == 0 ? R.mipmap.ic_tools_ac : R.mipmap.ic_tools);
+        edit_content_tool_2_ll.setVisibility(n == 1 ? View.VISIBLE : View.GONE);
+        edit_brushes_iv.setImageResource(n == 1 ? R.mipmap.ic_brushes_ac : R.mipmap.ic_brushes);
+        edit_content_tool_3_rv.setVisibility(n == 2 ? View.VISIBLE : View.GONE);
+        edit_effect_iv.setImageResource(n == 2 ? R.mipmap.ic_effect_ac : R.mipmap.ic_effect);
+        edit_content_tool_4_rv.setVisibility(n == 3 ? View.VISIBLE : View.GONE);
+        edit_sticker_iv.setImageResource(n == 3 ? R.mipmap.ic_sticker_ac : R.mipmap.ic_sticker);
+        edit_content_tool_5_rv.setVisibility(n == 4 ? View.VISIBLE : View.GONE);
+        edit_text_iv.setImageResource(n == 4 ? R.mipmap.ic_text_ac : R.mipmap.ic_text);
     }
 
     @Override

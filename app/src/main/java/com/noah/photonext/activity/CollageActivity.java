@@ -4,12 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,22 +23,25 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.noah.photonext.R;
-import com.noah.photonext.util.Utils;
+import com.noah.photonext.adapter.ColorAdapter;
+import com.noah.photonext.adapter.LayoutAdapter;
 import com.noah.photonext.adapter.Photo;
 import com.noah.photonext.base.BaseActivityToolbar;
 import com.noah.photonext.base.BaseLayout;
 import com.noah.photonext.custom.CustomLayout4and1;
+import com.noah.photonext.custom.LLayout;
 import com.noah.photonext.custom.RectangleIV;
 import com.noah.photonext.custom.ShapedImageView;
 import com.noah.photonext.custom.SquareLayout;
 import com.noah.photonext.custom.StandardLayout;
+import com.noah.photonext.custom.StartSeekBar;
 import com.noah.photonext.custom.Touch;
+import com.noah.photonext.model.LayoutObject;
+import com.noah.photonext.util.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,9 +53,12 @@ import butterknife.BindView;
 
 import static com.noah.photonext.util.Utils.FolderName;
 import static com.noah.photonext.util.Utils.INTENT_KEY_PICK_POS;
+import static com.noah.photonext.util.Utils.currentBitmap;
 import static com.noah.photonext.util.Utils.currentCollageHeight;
 import static com.noah.photonext.util.Utils.currentCollageWidth;
+import static com.noah.photonext.util.Utils.currentHistoryPos;
 import static com.noah.photonext.util.Utils.currentPhotos;
+import static com.noah.photonext.util.Utils.historyBitmaps;
 import static com.noah.photonext.util.Utils.numOfPhoto;
 import static com.noah.photonext.util.Utils.originCollageHeidht;
 import static com.noah.photonext.util.Utils.originCollageWidth;
@@ -55,69 +66,84 @@ import static com.noah.photonext.util.Utils.originCollageWidth;
 /**
  * Created by HuyLV-CT on 02-Nov-16.
  */
-public class CollageActivity extends BaseActivityToolbar implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+public class CollageActivity extends BaseActivityToolbar implements StartSeekBar.OnSeekBarChangeListener, View.OnClickListener {
     private static final int REQUEST_CODE_PICK_PHOTO = 101;
     LayoutInflater layoutInflater;
     @BindView(R.id.collage_main)
     FrameLayout collage_main;
+    //layout dc add vao collage_main sau khi chon layout
     BaseLayout collage_main_fllll;
     Touch touchListener;
 
     @BindView(R.id.collage_choose_layout_iv)
     ImageView collage_choose_layout_iv;
-    @BindView(R.id.collage_padding_iv)
-    ImageView collage_padding_iv;
+    //    @BindView(R.id.collage_padding_iv)
+//    ImageView collage_padding_iv;
     @BindView(R.id.collage_corner_iv)
     ImageView collage_corner_iv;
-    @BindView(R.id.collage_change_size_iv)
-    ImageView collage_change_size_iv;
-    @BindView(R.id.collage_border_color_iv)
+    //    @BindView(R.id.collage_change_size_iv)
+//    ImageView collage_change_size_iv;
+    @BindView(R.id.collage_background_iv)
     ImageView collage_border_color_iv;
 
-    @BindView(R.id.bottom_bar_second1)
-    LinearLayout bottom_bar_second1;
-    @BindView(R.id.bottom_bar_second2)
-    LinearLayout bottom_bar_second2;
-    @BindView(R.id.bottom_bar_second3)
-    LinearLayout bottom_bar_second3;
-    @BindView(R.id.bottom_bar_second4)
-    LinearLayout bottom_bar_second4;
 
     @BindView(R.id.collage_square_layout)
     SquareLayout collage_square_layout;
+
+
+    ////////
+    @BindView(R.id.bottom_bar_layout)
+    RecyclerView bottom_bar_layout;
+    LayoutAdapter layoutAdapter;
+
+    @BindView(R.id.bottom_bar_edge)
+    LinearLayout bottom_bar_edge;
+    @BindView(R.id.bottom_bar_color)
+    LinearLayout bottom_bar_color;
+
+    //seekbar
+    @BindView(R.id.bottom_bar_second1)
+    LinearLayout bottom_bar_second1;
+    @BindView(R.id.bottom_bar_second2)
+    RelativeLayout bottom_bar_second2;
     @BindView(R.id.collage_change_size_sb)
-    SeekBar collage_change_size_sb;
-    @BindView(R.id.collage_padding_sb)
-    SeekBar collage_padding_sb;
-    @BindView(R.id.collage_corner_sb)
-    SeekBar collage_corner_sb;
-    private Resources res;
-    private int mCurrentBackgroundColor = Color.GRAY;
+    StartSeekBar collage_change_size_sb;
+    @BindView(R.id.bottom_bar_padding_sb_cancel)
+    ImageView bottom_bar_padding_sb_close;
+    @BindView(R.id.bottom_bar_padding_sb_done)
+    ImageView bottom_bar_padding_sb_done;
 
-    @BindView(R.id.collage_indicator1)
-    View collage_indicator1;
-    @BindView(R.id.collage_indicator2)
-    View collage_indicator2;
-    @BindView(R.id.collage_indicator3)
-    View collage_indicator3;
-    @BindView(R.id.collage_indicator4)
-    View collage_indicator4;
-    @BindView(R.id.collage_indicator5)
-    View collage_indicator5;
+    //3 button change seekbar
+    @BindView(R.id.bottom_bar_margin)
+    LLayout bottom_bar_padding;
+    @BindView(R.id.bottom_bar_corner)
+    LLayout bottom_bar_corner;
+    @BindView(R.id.bottom_bar_ratio)
+    LLayout bottom_bar_ratio;
+    @BindView(R.id.collage_seekbar_tv)
+    TextView collage_seekbar_tv;
 
-    @BindView(R.id.choose_layout2_1)
-    ImageView choose_layout2_1;
-    @BindView(R.id.choose_layout3_1)
-    ImageView choose_layout3_1;
-    @BindView(R.id.choose_layout4_1)
-    ImageView choose_layout4_1;
-    @BindView(R.id.choose_layout4_2)
-    ImageView choose_layout4_2;
+    //tab3
+    @BindView(R.id.bottom_bar_color_pick)
+    RecyclerView bottom_bar_color_pick_rv;
+    ColorAdapter colorAdapter;
+    @BindView(R.id.bottom_bar_color_background)
+    RecyclerView bottom_bar_color_background_rv;
+    ColorAdapter backgroundAdapter;
 
+
+    ArrayList<LayoutObject> layoutList;
 
     ArrayList<Integer> unassignPhotosId;
+    int currentMargin = 0;
+    int currentCorner = 0;
+    int currentRatio = 0;
+    int newMargin = 0;
+    int newCorner = 0;
+    int newRatio = 0;
     private File imagePath;
     private int currentLayoutId;
+    private int seekbarType = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,7 +152,6 @@ public class CollageActivity extends BaseActivityToolbar implements SeekBar.OnSe
 
         //listener
         touchListener = new Touch(this);
-        res = getResources();
         layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         unassignPhotosId = new ArrayList<>();
         if (numOfPhoto == 4) {
@@ -136,31 +161,48 @@ public class CollageActivity extends BaseActivityToolbar implements SeekBar.OnSe
         }
         showHidePanel(-1);
         collage_change_size_sb.setOnSeekBarChangeListener(this);
-        collage_padding_sb.setOnSeekBarChangeListener(this);
-        collage_corner_sb.setOnSeekBarChangeListener(this);
-
-        collage_border_color_iv.setOnClickListener(this);
-        collage_change_size_iv.setOnClickListener(this);
         collage_corner_iv.setOnClickListener(this);
         collage_choose_layout_iv.setOnClickListener(this);
-        collage_padding_iv.setOnClickListener(this);
+        collage_border_color_iv.setOnClickListener(this);
 
-        choose_layout2_1.setOnClickListener(this);
-        choose_layout3_1.setOnClickListener(this);
-        choose_layout4_1.setOnClickListener(this);
-        choose_layout4_2.setOnClickListener(this);
+        //layout list
+        layoutList = Utils.createListt();
+        layoutAdapter = new LayoutAdapter(this, layoutList);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.HORIZONTAL, false);
+        bottom_bar_layout.setLayoutManager(gridLayoutManager);
+        bottom_bar_layout.setAdapter(layoutAdapter);
+
+        //seekbar
+        bottom_bar_padding.setOnClickListener(this);
+        bottom_bar_corner.setOnClickListener(this);
+        bottom_bar_ratio.setOnClickListener(this);
+        bottom_bar_padding_sb_close.setOnClickListener(this);
+        bottom_bar_padding_sb_done.setOnClickListener(this);
+
+        collage_change_size_sb.setProgress(currentMargin + 50);
+
+        //tab3
+        colorAdapter = new ColorAdapter(this, true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        bottom_bar_color_pick_rv.setLayoutManager(linearLayoutManager);
+        bottom_bar_color_pick_rv.setAdapter(colorAdapter);
+
+        backgroundAdapter = new ColorAdapter(this, false);
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        bottom_bar_color_background_rv.setLayoutManager(linearLayoutManager2);
+        bottom_bar_color_background_rv.setAdapter(backgroundAdapter);
     }
 
 
-    void changeLayout(int first, int second, boolean standard) {
+    public void changeLayout(int first, int second, boolean standard) {
         if (first != numOfPhoto || currentLayoutId != second) {
-            if(first > numOfPhoto){
-                for(int i=0;i<first-numOfPhoto;i++) {
+            if (first > numOfPhoto) {
+                for (int i = 0; i < first - numOfPhoto; i++) {
                     currentPhotos.add(new Photo(null));
                 }
-            }else{
-                for(int i=0;i<numOfPhoto-first;i++){
-                    currentPhotos.remove(currentPhotos.size()-1);
+            } else {
+                for (int i = 0; i < numOfPhoto - first; i++) {
+                    currentPhotos.remove(currentPhotos.size() - 1);
                 }
             }
 
@@ -176,6 +218,7 @@ public class CollageActivity extends BaseActivityToolbar implements SeekBar.OnSe
         }
     }
 
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_collage;
@@ -183,111 +226,188 @@ public class CollageActivity extends BaseActivityToolbar implements SeekBar.OnSe
 
 
     void showHidePanel(int n) {
-        bottom_bar_second1.setVisibility(n == 0 ? View.VISIBLE : View.GONE);
-        collage_indicator1.setVisibility(n == 0 ? View.VISIBLE : View.GONE);
-        bottom_bar_second2.setVisibility(n == 1 ? View.VISIBLE : View.GONE);
-        collage_indicator2.setVisibility(n == 1 ? View.VISIBLE : View.GONE);
-        bottom_bar_second3.setVisibility(n == 2 ? View.VISIBLE : View.GONE);
-        collage_indicator3.setVisibility(n == 2 ? View.VISIBLE : View.GONE);
-        bottom_bar_second4.setVisibility(n == 3 ? View.VISIBLE : View.GONE);
-        collage_indicator4.setVisibility(n == 3 ? View.VISIBLE : View.GONE);
-        collage_indicator5.setVisibility(n == 4 ? View.VISIBLE : View.GONE);
+        bottom_bar_layout.setVisibility(n == 0 ? View.VISIBLE : View.GONE);
+        collage_choose_layout_iv.setImageResource(n == 0 ? R.mipmap.ic_collage_setup1_ac : R.mipmap.ic_collage_setup1);
+        bottom_bar_edge.setVisibility(n == 1 ? View.VISIBLE : View.GONE);
+        collage_corner_iv.setImageResource(n == 1 ? R.mipmap.ic_collage_setup2_ac : R.mipmap.ic_collage_setup2);
+        bottom_bar_color.setVisibility(n == 2 ? View.VISIBLE : View.GONE);
+        collage_border_color_iv.setImageResource(n == 2 ? R.mipmap.ic_collage_setup3_ac : R.mipmap.ic_collage_setup3);
+    }
+
+    public void changeBackground(String color) {
+        collage_main.setBackgroundColor(Color.parseColor(color));
+    }
+
+    public void changeBackground(int resId) {
+        collage_main.setBackgroundResource(resId);
+        BitmapDrawable b = new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), resId));
+        b.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        collage_main.setBackground(b);
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    public void onSeekBarValueChange(StartSeekBar bar, int value) {
         showHideBorder(-1);
-        switch (seekBar.getId()) {
-            case R.id.collage_change_size_sb:
-                int currentRatio = progress - 80;
-
-                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) collage_main.getLayoutParams();
-                if (currentRatio >= 0) {
-                    lp.width = originCollageWidth - (currentRatio * 10);
-                    lp.height = originCollageWidth;
-                } else {
-                    lp.width = originCollageWidth;
-                    lp.height = originCollageWidth + (currentRatio * 10);
-                }
-                collage_main.setLayoutParams(lp);
+        switch (seekbarType) {
+            case 0:
+                changeSize(value, newCorner, newRatio);
                 break;
-            case R.id.collage_padding_sb:
-                for (ShapedImageView iv : collage_main_fllll.currentIV) {
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    params.setMargins(progress, progress, progress, progress);
-                    iv.setLayoutParams(params);
-                }
-
-
+            case 1:
+                changeSize(newMargin, value, newRatio);
                 break;
-            case R.id.collage_corner_sb:
-                for (int i = 0; i < collage_main_fllll.currentIV.size(); i++) {
-                    ((RectangleIV) collage_main_fllll.currentIV.get(i)).setCornerRadius(progress);
-                }
-                break;
+            case 2:
+                changeSize(newMargin, newCorner, value);
         }
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
+    public void onClickNext() {
+        Intent i = new Intent(this, EditActivity.class);
+        currentBitmap = takeScreenshot();
+        historyBitmaps.add(currentBitmap);
+        startActivity(i);
     }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+    public void onStartTrackingTouch(StartSeekBar bar) {
+        collage_seekbar_tv.setVisibility(View.VISIBLE);
     }
 
-    private void showColorDialog() {
-        ColorPickerDialogBuilder
-                .with(this)
-                .setTitle("Choose HSV color")
-                .initialColor(mCurrentBackgroundColor)
-                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                .density(6)
-                .setPositiveButton(getString(android.R.string.ok), new ColorPickerClickListener() {
-                    //listens to the color that will be selected
-                    @Override
-                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                        mCurrentBackgroundColor = selectedColor; //Changes the mCurrentBackgroundColor to the one selected here
-                        collage_main.setBackgroundColor(mCurrentBackgroundColor);
-                    }
-                })
-                .setNegativeButton(getString(android.R.string.cancel), null)
-                .build()
-                .show();
+    @Override
+    public void onStopTrackingTouch(StartSeekBar bar, int value) {
+        collage_seekbar_tv.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Utils.showAlertDialog(this, "Photo not saved!", "Are you sure to delete this photo!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                historyBitmaps.clear();
+                currentHistoryPos = 0;
+                finish();
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
+        super.onClick(v);
         showHideBorder(-1);
         switch (v.getId()) {
+            /////////////////////////////////tab 1 2 3
             case R.id.collage_choose_layout_iv:
                 showHidePanel(0);
                 break;
-            case R.id.collage_padding_iv:
+            case R.id.collage_corner_iv:
                 showHidePanel(1);
                 break;
-            case R.id.collage_corner_iv:
+            case R.id.collage_background_iv:
                 showHidePanel(2);
                 break;
-            case R.id.collage_change_size_iv:
-                showHidePanel(3);
+            //////////////////////////////// in tab 2
+            case R.id.bottom_bar_margin:
+                showSeekBar(0);
                 break;
-            case R.id.collage_border_color_iv:
-                showColorDialog();
+            case R.id.bottom_bar_corner:
+                showSeekBar(1);
                 break;
-            case R.id.choose_layout2_1:
-                changeLayout(2, 1, true);
+            case R.id.bottom_bar_ratio:
+                showSeekBar(2);
                 break;
-            case R.id.choose_layout3_1:
-                changeLayout(3, 1, true);
+
+
+            ////sliding bar close and done
+            case R.id.bottom_bar_padding_sb_cancel:
+                bottom_bar_second2.setVisibility(View.INVISIBLE);
+                bottom_bar_second1.setVisibility(View.VISIBLE);
+                showToolbarButton();
+                bottom_bar_padding.setIconImage(R.mipmap.ic_collage_setup2_1);
+                bottom_bar_corner.setIconImage(R.mipmap.ic_collage_setup2);
+                bottom_bar_ratio.setIconImage(R.mipmap.ic_collage_setup2_2);
+                changeSize(currentMargin, currentCorner, currentRatio);
                 break;
-            case R.id.choose_layout4_1:
-                changeLayout(4, 1, false);
+            case R.id.bottom_bar_padding_sb_done:
+                bottom_bar_second2.setVisibility(View.INVISIBLE);
+                bottom_bar_second1.setVisibility(View.VISIBLE);
+                bottom_bar_padding.setIconImage(R.mipmap.ic_collage_setup2_1);
+                bottom_bar_corner.setIconImage(R.mipmap.ic_collage_setup2);
+                bottom_bar_ratio.setIconImage(R.mipmap.ic_collage_setup2_2);
+                showToolbarButton();
+                currentMargin = newMargin;
+                currentCorner = newCorner;
+                currentRatio = newRatio;
                 break;
         }
+    }
+
+    void changeSize(int margin, int corner, int ratio) {
+
+        //margin
+        if (margin != newMargin) {
+            newMargin = margin;
+            collage_seekbar_tv.setText(String.valueOf(margin));
+            for (ShapedImageView iv : collage_main_fllll.currentIVlist) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(margin, margin, margin, margin);
+                iv.setLayoutParams(params);
+            }
+
+
+        }
+
+        //corner
+        if (corner != newCorner) {
+            newCorner = corner;
+            collage_seekbar_tv.setText(String.valueOf(corner));
+            for (int i = 0; i < collage_main_fllll.currentIVlist.size(); i++) {
+                ((RectangleIV) collage_main_fllll.currentIVlist.get(i)).setCornerRadius(corner);
+            }
+        }
+
+        //ratio
+        if (ratio != newRatio) {
+            newRatio = ratio;
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) collage_main.getLayoutParams();
+            if (newRatio >= 0) {
+                lp.width = originCollageWidth - (ratio * 10);
+                lp.height = originCollageWidth;
+            } else {
+                lp.width = originCollageWidth;
+                lp.height = originCollageWidth + (ratio * 10);
+            }
+            collage_main.setLayoutParams(lp);
+        }
+    }
+
+    private void showSeekBar(int i) {
+        hideToolbarButton();
+        bottom_bar_second2.setVisibility(View.VISIBLE);
+        bottom_bar_second1.setVisibility(View.INVISIBLE);
+        seekbarType = i;
+        bottom_bar_padding.setIconImage(seekbarType == 0 ? R.mipmap.ic_collage_setup2_1_ac : R.mipmap.ic_collage_setup2_1);
+        bottom_bar_corner.setIconImage(seekbarType == 1 ? R.mipmap.ic_collage_setup2_ac : R.mipmap.ic_collage_setup2);
+        bottom_bar_ratio.setIconImage(seekbarType == 2 ? R.mipmap.ic_collage_setup2_2_ac : R.mipmap.ic_collage_setup2_2);
+
+        switch (i) {
+            case 0:
+                newMargin = currentMargin;
+                collage_change_size_sb.setAbsoluteMinMaxValue(0, 100);
+                collage_change_size_sb.setProgress(currentMargin);
+                break;
+            case 1:
+                collage_change_size_sb.setAbsoluteMinMaxValue(0, 100);
+                collage_change_size_sb.setProgress(currentCorner);
+                break;
+            case 2:
+                collage_change_size_sb.setAbsoluteMinMaxValue(-80, 80);
+                collage_change_size_sb.setProgress(currentRatio);
+                break;
+        }
+
     }
 
     @Override
@@ -321,8 +441,15 @@ public class CollageActivity extends BaseActivityToolbar implements SeekBar.OnSe
     }
 
     @Override
-    public void onClickNext() {
-
+    public void onClickBack() {
+        Utils.showAlertDialog(this, "Photo not saved!", "Are you sure to delete this photo!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                historyBitmaps.clear();
+                currentHistoryPos = 0;
+                finish();
+            }
+        });
     }
 
     public Bitmap takeScreenshot() {
@@ -380,9 +507,10 @@ public class CollageActivity extends BaseActivityToolbar implements SeekBar.OnSe
     }
 
     public void showHideBorder(int vId) {
-        for (ShapedImageView v : collage_main_fllll.currentIV) {
+        for (ShapedImageView v : collage_main_fllll.currentIVlist) {
             if (vId == v.getId()) v.setShowBorder(true);
             else v.setShowBorder(false);
         }
     }
+
 }

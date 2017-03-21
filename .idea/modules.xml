@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PhotoNext.iml" filepath="$PROJECT_DIR$/PhotoNext.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SmoothCheckbox/SmoothCheckbox.iml" filepath="$PROJECT_DIR$/SmoothCheckbox/SmoothCheckbox.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/colorchooser/colorchooser.iml" filepath="$PROJECT_DIR$/colorchooser/colorchooser.iml" />
       <module fileurl="file://$PROJECT_DIR$/imageviewtouch/imageviewtouch.iml" filepath="$PROJECT_DIR$/imageviewtouch/imageviewtouch.iml" />

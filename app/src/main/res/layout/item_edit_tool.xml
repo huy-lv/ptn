@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.noah.photonext.custom.LLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="70dp"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    app:icon_size="27dp"
+    app:text_size="3sp">
+
+</com.noah.photonext.custom.LLayout>

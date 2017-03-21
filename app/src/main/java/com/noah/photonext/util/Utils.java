@@ -3,23 +3,54 @@ package com.noah.photonext.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.Xfermode;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
+import android.view.View;
 
+import com.noah.photonext.R;
+import com.noah.photonext.activity.AdjustmentActivity;
+import com.noah.photonext.activity.AutoContrastActivity;
+import com.noah.photonext.activity.AutoFixActivity;
+import com.noah.photonext.activity.BlurActivity;
+import com.noah.photonext.activity.CropActivity;
+import com.noah.photonext.activity.DoubleActivity;
+import com.noah.photonext.activity.RotateActivity;
 import com.noah.photonext.custom.PhotoList;
+import com.noah.photonext.model.AdjustmentToolObject;
+import com.noah.photonext.model.DoubleThumbnailObject;
+import com.noah.photonext.model.EditToolObject;
+import com.noah.photonext.model.EffectToolObject;
+import com.noah.photonext.model.LayoutObject;
+
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by HuyLV-CT on 03-Nov-16.
@@ -42,18 +73,29 @@ public class Utils {
     public static final int REQUEST_CODE_PICK_DOUBLE = 108;
     public static final String INTENT_KEY_DOUBLE_PATH = "INTENT_KEY_DOUBLE_PATH";
     public static final String INTENT_KEY_PICK_DOUBLE = "INTENT_KEY_PICK_DOUBLE";
-
-    public static int numOfPhoto =0;
+    public static final String BUNDLE_FRAGMENT_KEY = "BUNDLE_FRAGMENT_KEY";
+    public static final String INTENT_KEY_EFFECT_GROUP = "INTENT_KEY_EFFECT_GROUP";
+    public static final String CAMERA_PICTURE_PREFIX = "pic";
+    public static final int CAMERA_TAKE_A_PICTURE = 1001;
+    public static final int DOUBLE_NORMAL = 0, DOUBLE_DARKEN = 1, DOUBLE_MULTIPLY = 2, DOUBLE_LIGHTEN = 3, DOUBLE_SCREEN = 4;
+    private static final String APP_CACHE_FOLDER = "cacheFolder";
+    public static int numOfPhoto = 0;
     public static PhotoList currentPhotos = new PhotoList();
     public static String PREPATH = "file://";
-    public static int canvasWidth,canvasHeight;
-    public static int frameWidth,frameHeight, originCollageWidth, originCollageHeidht,currentCollageWidth,currentCollageHeight;
+    public static int canvasWidth, canvasHeight;
+    public static int frameWidth, frameHeight, originCollageWidth, originCollageHeidht, currentCollageWidth, currentCollageHeight;
     public static String FolderName = "Pnext";
-
     public static Bitmap currentBitmap;
     public static ArrayList<Bitmap> historyBitmaps = new ArrayList<>();
     public static int currentHistoryPos = 0;
-    public static Bitmap newBitmap;
+    public static Xfermode[] xfermodes = {
+            new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER),
+            new PorterDuffXfermode(PorterDuff.Mode.DARKEN),
+            new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY),
+            new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN),
+            new PorterDuffXfermode(PorterDuff.Mode.SCREEN)
+    };
+
 
 //    public static ArrayList<Integer> origW;
 //    public static ArrayList<Integer> origH;
@@ -65,6 +107,17 @@ public class Utils {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+
+    public static Bitmap getBlurBackground() {
+        Bitmap bm = historyBitmaps.get(currentHistoryPos);
+        Bitmap dst = bm.copy(bm.getConfig(), true);
+        Mat m = new Mat();
+        org.opencv.android.Utils.bitmapToMat(bm, m);
+        Imgproc.GaussianBlur(m, m, new Size(91, 91), 0);
+        org.opencv.android.Utils.matToBitmap(m, dst);
+        return dst;
+    }
+
     private static int getExifOrientation(String src) throws IOException {
         int orientation = 1;
 
@@ -76,12 +129,12 @@ public class Utils {
              */
             if (Build.VERSION.SDK_INT >= 5) {
                 Class<?> exifClass = Class.forName("android.media.ExifInterface");
-                Constructor<?> exifConstructor = exifClass.getConstructor(new Class[] { String.class });
-                Object exifInstance = exifConstructor.newInstance(new Object[] { src });
-                Method getAttributeInt = exifClass.getMethod("getAttributeInt", new Class[] { String.class, int.class });
+                Constructor<?> exifConstructor = exifClass.getConstructor(String.class);
+                Object exifInstance = exifConstructor.newInstance(src);
+                Method getAttributeInt = exifClass.getMethod("getAttributeInt", String.class, int.class);
                 Field tagOrientationField = exifClass.getField("TAG_ORIENTATION");
                 String tagOrientation = (String) tagOrientationField.get(null);
-                orientation = (Integer) getAttributeInt.invoke(exifInstance, new Object[] { tagOrientation, 1});
+                orientation = (Integer) getAttributeInt.invoke(exifInstance, tagOrientation, 1);
             }
         } catch (ClassNotFoundException | SecurityException | NoSuchMethodException | IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
             e.printStackTrace();
@@ -89,6 +142,7 @@ public class Utils {
 
         return orientation;
     }
+
     public static Bitmap fixRotateBitmap(String src) {
         Bitmap bitmap = BitmapFactory.decodeFile(src);
         try {
@@ -143,13 +197,153 @@ public class Utils {
         return bitmap;
     }
 
-    public static void showAlertDialog(final Activity context,String title,String message,DialogInterface.OnClickListener onPositive){
+    public static void showAlertDialog(final Activity context, String title, String message, DialogInterface.OnClickListener onPositive) {
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(android.R.string.yes,onPositive)
+                .setPositiveButton(android.R.string.yes, onPositive)
                 .setNegativeButton(android.R.string.no, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
+    public static Bitmap takeScreenShot(Activity activity) {
+        View view = activity.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+
+
+        Bitmap b1 = view.getDrawingCache();
+        Rect frame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        int statusBarHeight = frame.top;
+
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+
+        Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
+        view.destroyDrawingCache();
+        return b;
+    }
+
+    public static void createAlertDialog(Context c, String message) {
+        AlertDialog.Builder b = new AlertDialog.Builder(c);
+        b.setMessage(message);
+        b.create().show();
+    }
+
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int noOfColumns = Math.round(dpWidth / 120);
+        return noOfColumns;
+    }
+
+    public static ArrayList<LayoutObject> createListt() {
+        ArrayList<LayoutObject> layoutList = new ArrayList<>();
+        layoutList.add(new LayoutObject(R.mipmap.f2s1, 2, 1, true));
+        layoutList.add(new LayoutObject(R.mipmap.f2s2, 2, 2, true));
+        layoutList.add(new LayoutObject(R.mipmap.f2s3, 2, 3, true));
+        layoutList.add(new LayoutObject(R.mipmap.f2s4, 2, 4, true));
+        layoutList.add(new LayoutObject(R.mipmap.f2s5, 2, 5, true));
+        layoutList.add(new LayoutObject(R.mipmap.f3s1, 3, 1, true));
+        layoutList.add(new LayoutObject(R.mipmap.f3s2, 3, 2, true));
+        layoutList.add(new LayoutObject(R.mipmap.f3s3, 3, 3, true));
+        layoutList.add(new LayoutObject(R.mipmap.f3s4, 3, 4, true));
+        layoutList.add(new LayoutObject(R.mipmap.f4s1, 4, 1, true));
+        layoutList.add(new LayoutObject(R.mipmap.f4s2, 4, 2, true));
+        layoutList.add(new LayoutObject(R.mipmap.f4s3, 4, 3, true));
+        layoutList.add(new LayoutObject(R.mipmap.f4s4, 4, 4, true));
+        layoutList.add(new LayoutObject(R.mipmap.f4s5, 4, 5, true));
+        layoutList.add(new LayoutObject(R.mipmap.f4s6, 4, 6, true));
+        layoutList.add(new LayoutObject(R.mipmap.f4s7, 4, 7, false));
+        return layoutList;
+    }
+
+    public static ArrayList<EditToolObject> createEditToolList(Resources r) {
+        ArrayList<EditToolObject> editToolObjects = new ArrayList<>();
+        editToolObjects.add(new EditToolObject(R.mipmap.ic_tools_crop, r.getString(R.string.crop), CropActivity.class));
+        editToolObjects.add(new EditToolObject(R.mipmap.ic_tools_rotate, r.getString(R.string.rotate), RotateActivity.class));
+        editToolObjects.add(new EditToolObject(R.mipmap.ic_tools_double, r.getString(R.string.doublee), DoubleActivity.class));
+        editToolObjects.add(new EditToolObject(R.mipmap.ic_tools_adjustment, r.getString(R.string.adjustment), AdjustmentActivity.class));
+        editToolObjects.add(new EditToolObject(R.mipmap.ic_tools_autofix, r.getString(R.string.autofix), AutoFixActivity.class));
+        editToolObjects.add(new EditToolObject(R.mipmap.ic_tools_autocontrast, r.getString(R.string.auto_contrast), AutoContrastActivity.class));
+        editToolObjects.add(new EditToolObject(R.mipmap.ic_tools_blur, r.getString(R.string.blur), BlurActivity.class));
+        return editToolObjects;
+    }
+
+    public static ArrayList<AdjustmentToolObject> createAdjustmentToolList(Resources r) {
+        ArrayList<AdjustmentToolObject> e = new ArrayList<>();
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_exposure, R.mipmap.ic_tools_adjustment_exposure_ac, r.getString(R.string.adjustment_exposure)));
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_temperature, R.mipmap.ic_tools_adjustment_temperature_ac, r.getString(R.string.adjustment_temperature)));
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_contrast, R.mipmap.ic_tools_adjustment_contrast_ac, r.getString(R.string.adjustment_contrast)));
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_brightness, R.mipmap.ic_tools_adjustment_brightness_ac, r.getString(R.string.adjustment_brightness)));
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_vibrance, R.mipmap.ic_tools_adjustment_vibrance_ac, r.getString(R.string.adjustment_vibrance)));
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_highlights, R.mipmap.ic_tools_adjustment_highlights_ac, r.getString(R.string.adjustment_highlights)));
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_shadows, R.mipmap.ic_tools_adjustment_shadows_ac, r.getString(R.string.adjustment_shadows)));
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_saturation, R.mipmap.ic_tools_adjustment_saturation_ac, r.getString(R.string.adjustment_saturation)));
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_lightness, R.mipmap.ic_tools_adjustment_lightness_ac, r.getString(R.string.adjustment_lightness)));
+        e.add(new AdjustmentToolObject(R.mipmap.ic_tools_adjustment_hue, R.mipmap.ic_tools_adjustment_hue_ac, r.getString(R.string.adjustment_hue)));
+        return e;
+    }
+
+    public static ArrayList<DoubleThumbnailObject> createDoubleList(Resources r) {
+        ArrayList<DoubleThumbnailObject> e = new ArrayList<>();
+        e.add(new DoubleThumbnailObject(null, r.getString(R.string.double_normal)));
+        e.add(new DoubleThumbnailObject(null, r.getString(R.string.double_darken)));
+        e.add(new DoubleThumbnailObject(null, r.getString(R.string.double_multiply)));
+        return e;
+    }
+
+    public static ArrayList<EffectToolObject> createEffectToolList(Resources r) {
+        ArrayList<EffectToolObject> e = new ArrayList<>();
+
+        return e;
+    }
+
+    public static ArrayList<EffectToolObject> createEffectGroupList(Resources r) {
+        ArrayList<EffectToolObject> e = new ArrayList<>();
+        e.add(new EffectToolObject("Sepia"));
+        return e;
+    }
+
+    public static File getCacheDirectory() {
+        File file = new File(Environment.getExternalStorageDirectory(),
+                APP_CACHE_FOLDER);
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                Log.e("cxz", "CACHE FOLDER not create");
+            }
+        }
+
+        return file;
+    }
+
+    public static File createImageFile(String prefix, File dir, String extension) {
+        String id = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+        if (isExternalStorageWritable()) {
+            try {
+                File file = new File(dir, prefix + id + extension);
+                if (!file.exists()) {
+                    file.getParentFile().mkdirs();
+                    file.createNewFile();
+                }
+                return file;
+            } catch (IOException ex) {
+                Log.e("cxz", "error 3");
+            }
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
 }

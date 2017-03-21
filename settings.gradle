@@ -1,2 +1,2 @@
-include ':app', ':colorchooser', ':imageviewtouch'
+include ':app', ':colorchooser', ':imageviewtouch', ':SmoothCheckbox'
 include ':openCVLibrary310'

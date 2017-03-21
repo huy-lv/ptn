@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.noah.photonext.custom.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/item_layout_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/ic_collage_setup1"
+        android:tint="@android:color/white" />
+</com.noah.photonext.custom.SquareLayout>

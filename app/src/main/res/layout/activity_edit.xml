@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -17,229 +16,238 @@
             android:id="@+id/edit_main_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/linearLayout"
-            android:src="@mipmap/no_media"/>
+            android:layout_above="@+id/edit_tool_list"
+            android:src="@mipmap/no_media" />
 
-        <LinearLayout
-            android:id="@+id/bottom_bar"
+
+        <FrameLayout
+            android:id="@+id/edit_content_tool_tab"
             android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_bar_height"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@color/edit_background_color_dark"
-            android:orientation="horizontal"
-            android:weightSum="5">
+            android:orientation="horizontal">
 
-            <RelativeLayout
-                android:layout_width="0dp"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/edit_content_tool_1_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/edit_content_tool_2_ll"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="4">
 
-                <ImageView
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/edit_content_tool_3_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/edit_content_tool_4_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/edit_content_tool_5_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/edit_tool_list"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_second_height"
+            android:layout_above="@+id/edit_content_tool_tab"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal">
+
+
+            <ImageView
                     android:id="@+id/edit_tool_iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/bottom_bar_icon_height"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/bottom_bar_second_height"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
+                android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="10dp"
                     android:src="@mipmap/ic_tools" />
 
-                <View
-                    android:id="@+id/collage_indicator1"
-                    android:layout_width="40dp"
-                    android:layout_height="4dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@android:color/white" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
 
                 <ImageView
                     android:id="@+id/edit_brushes_iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/bottom_bar_icon_height"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/bottom_bar_second_height"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="10dp"
                     android:src="@mipmap/ic_brushes" />
 
-                <View
-                    android:id="@+id/collage_indicator2"
-                    android:layout_width="40dp"
-                    android:layout_height="4dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@android:color/white" />
-            </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
 
-                <View
-                    android:id="@+id/collage_indicator3"
-                    android:layout_width="40dp"
-                    android:layout_height="4dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@android:color/white" />
 
                 <ImageView
                     android:id="@+id/edit_effect_iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/bottom_bar_icon_height"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/bottom_bar_second_height"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="10dp"
                     android:src="@mipmap/ic_effect" />
-            </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
 
                 <ImageView
-                    android:id="@+id/edit_frame_iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/bottom_bar_icon_height"
+                    android:id="@+id/edit_sticker_iv"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/bottom_bar_second_height"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@mipmap/ic_frame" />
+                    android:padding="10dp"
+                    android:src="@mipmap/ic_sticker" />
 
-                <View
-                    android:id="@+id/collage_indicator4"
-                    android:layout_width="40dp"
-                    android:layout_height="4dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@android:color/white" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
 
                 <ImageView
                     android:id="@+id/edit_text_iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/bottom_bar_icon_height"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/bottom_bar_second_height"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="10dp"
                     android:src="@mipmap/ic_text" />
 
-                <View
-                    android:id="@+id/collage_indicator5"
-                    android:layout_width="40dp"
-                    android:layout_height="4dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@android:color/white" />
-            </RelativeLayout>
         </LinearLayout>
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/edit_content_effect_tab"-->
+        <!--android:visibility="invisible"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_above="@+id/bottom_bar">-->
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_bar_second_height"
-            android:layout_above="@+id/bottom_bar"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+        <!--<LinearLayout-->
+        <!--android:id="@+id/linearLayout4"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="3"-->
+        <!--android:background="@mipmap/op65">-->
 
-            <HorizontalScrollView
-                android:id="@+id/bottom_bar_second1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <!--<TextView-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/effect"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:textSize="20sp" />-->
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+        <!--<TextView-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/overlay"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:textSize="20sp" />-->
 
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f1_crop"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_crop"
-                        app:text="@string/crop" />
+        <!--<TextView-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/stylize"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:textSize="20sp" />-->
+        <!--</LinearLayout>-->
 
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f2_rotate"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_rotate"
-                        app:text="@string/rotate" />
+        <!--<HorizontalScrollView-->
+        <!--android:id="@+id/edit_effect_group"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/bottom_bar_second_height"-->
+        <!--android:layout_above="@+id/linearLayout4"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:background="@mipmap/op35">-->
 
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f3_double"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_double"
-                        app:text="@string/doublee" />
+        <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="horizontal">-->
 
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f4_adjustment"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_adjustment"
-                        app:text="@string/adjustment" />
+        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+        <!--android:id="@+id/edit_effect_group1"-->
+        <!--android:layout_width="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_height="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_margin="10dp"-->
+        <!--app:civ_border_color="@android:color/white"-->
+        <!--android:src="@mipmap/plus" />-->
 
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f5_autofix"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_autofix"
-                        app:text="@string/autofix" />
+        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+        <!--android:id="@+id/edit_effect_group2"-->
+        <!--android:layout_width="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_height="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_margin="10dp"-->
+        <!--app:civ_border_color="@android:color/white"-->
+        <!--android:src="@mipmap/plus" />-->
 
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f6_auto_contrast"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_autocontrast"
-                        app:text="@string/auto_contrast" />
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f7_blur"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_blur"
-                        app:text="@string/blur" />
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f8_smooth"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_smooth"
-                        app:text="@string/smooth" />
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f9_sharpen"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_sharpen"
-                        app:text="@string/sharpen" />
-                    <com.noah.photonext.custom.LLayout
-                        android:id="@+id/edit_f10_splash"
-                        android:layout_width="@dimen/bottom_bar_second_height"
-                        android:layout_height="@dimen/bottom_bar_second_height"
-                        app:icon="@mipmap/ic_tools_splash"
-                        app:text="@string/splash" />
-                </LinearLayout>
-            </HorizontalScrollView>
+        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+        <!--android:id="@+id/edit_effect_group3"-->
+        <!--android:layout_width="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_height="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_margin="10dp"-->
+        <!--app:civ_border_color="@android:color/white"-->
+        <!--android:src="@mipmap/plus" />-->
 
-        </LinearLayout>
+        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+        <!--android:id="@+id/edit_effect_group4"-->
+        <!--android:layout_width="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_height="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_margin="10dp"-->
+        <!--app:civ_border_color="@android:color/white"-->
+        <!--android:src="@mipmap/plus" />-->
+
+        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+        <!--android:id="@+id/edit_effect_group5"-->
+        <!--android:layout_width="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_height="@dimen/bottom_bar_third_icon_height"-->
+        <!--android:layout_margin="10dp"-->
+        <!--app:civ_border_color="@android:color/white"-->
+        <!--android:src="@mipmap/plus" />-->
+        <!--</LinearLayout>-->
+
+        <!--</HorizontalScrollView>-->
+
+        <!--<android.support.v4.view.ViewPager-->
+        <!--android:id="@+id/edit_viewpager_effect_group"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_above="@+id/edit_effect_group"/>-->
+        <!--</RelativeLayout>-->
     </RelativeLayout>
 </LinearLayout>

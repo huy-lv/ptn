@@ -2,16 +2,20 @@ package com.noah.photonext.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
@@ -19,17 +23,23 @@ import com.gun0912.tedpermission.TedPermission;
 import com.noah.photonext.R;
 import com.noah.photonext.adapter.GalleryAdapter;
 import com.noah.photonext.adapter.Photo;
+import com.noah.photonext.adapter.SelectedPhotoAdapter;
 import com.noah.photonext.base.BaseActivityToolbar;
+import com.noah.photonext.task.LoadPhotoTask;
 import com.noah.photonext.util.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 import static com.noah.photonext.util.Utils.INTENT_KEY_PICK_DOUBLE;
 import static com.noah.photonext.util.Utils.INTENT_KEY_PICK_ONE;
 import static com.noah.photonext.util.Utils.INTENT_KEY_PICK_ONE_EDIT;
+import static com.noah.photonext.util.Utils.calculateNoOfColumns;
 import static com.noah.photonext.util.Utils.currentPhotos;
 import static com.noah.photonext.util.Utils.numOfPhoto;
 
@@ -38,16 +48,20 @@ import static com.noah.photonext.util.Utils.numOfPhoto;
  */
 
 public class PickPhotoActivity extends BaseActivityToolbar {
-    private Handler handler;
-
+    public GalleryAdapter galleryAdapter;
+    @BindView(R.id.pick_iv_no_media)
+    public LinearLayout pick_iv_no_media;
+    ArrayList<Photo> selectedPhoto = new ArrayList<>();
     @BindView(R.id.pick_gv)
     GridView pick_gv;
-    private GalleryAdapter adapter;
-    @BindView(R.id.pick_iv_no_media)
-    ImageView pick_iv_no_media;
-
+    @BindView(R.id.pick_selected_rv)
+    RecyclerView pick_selected_rv;
+    @BindView(R.id.pick_loading_pb)
+    ProgressBar pick_loading_pb;
     boolean PICK_ONE = false;
     int PICK_IMAGE_POS = -1;
+    private SelectedPhotoAdapter selectedAdapter;
+    private String capturedPhoto;
 
     @Override
     protected int getLayoutId() {
@@ -68,6 +82,7 @@ public class PickPhotoActivity extends BaseActivityToolbar {
             PICK_IMAGE_POS = -2;
         }
 
+
         new TedPermission(this).setPermissionListener(new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -76,56 +91,70 @@ public class PickPhotoActivity extends BaseActivityToolbar {
 
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                Toast.makeText(PickPhotoActivity.this,"STOP",Toast.LENGTH_SHORT).show();
+                Utils.createAlertDialog(PickPhotoActivity.this, "STOPP");
             }
-        }).setDeniedMessage("If you reject permission,you can not use this service\\n\\nPlease turn on permissions at [Setting] > [Permission]")
+        }).setDeniedMessage(getString(R.string.deny_message))
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
 
 
+        selectedAdapter = new SelectedPhotoAdapter(this, selectedPhoto);
+        LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        pick_selected_rv.setLayoutManager(llm);
+        pick_selected_rv.setAdapter(selectedAdapter);
+
     }
 
+    private boolean hasIntent(Context context, String action) {
+        final PackageManager packageManager = context.getPackageManager();
+        final Intent it = new Intent(action);
+        List<ResolveInfo> lst = packageManager.queryIntentActivities(it, PackageManager.MATCH_DEFAULT_ONLY);
+        return lst.size() > 0;
+    }
+
+    @OnClick(R.id.pick_camera_iv)
+    void onClickCamera() {
+        if (!hasIntent(this, MediaStore.ACTION_IMAGE_CAPTURE)) {
+            Toast.makeText(this, getResources().getString(R.string.camera_not_available_message), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File outPut = Utils.createImageFile(Utils.CAMERA_PICTURE_PREFIX,
+                Utils.getCacheDirectory(), ".JPEG");
+        if (outPut == null) {
+            Toast.makeText(
+                    this,
+                    getResources()
+                            .getString(R.string.camera_create_file_failed),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        capturedPhoto = outPut.getAbsolutePath();
+        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outPut));
+        takeIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        if (takeIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takeIntent, Utils.CAMERA_TAKE_A_PICTURE);
+        }
+    }
     private void init() {
-        handler = new Handler();
         pick_gv.setFastScrollEnabled(true);
-        adapter = new GalleryAdapter(this);
-        adapter.setPickOne(PICK_ONE);
+        int noOfColumns = calculateNoOfColumns(this);
+        pick_gv.setNumColumns(noOfColumns);
+        galleryAdapter = new GalleryAdapter(this, selectedPhoto);
+        galleryAdapter.setPickOne(PICK_ONE);
 
-        pick_gv.setAdapter(adapter);
+        pick_gv.setAdapter(galleryAdapter);
 
-        new Thread() {
-
-            @Override
-            public void run() {
-                Looper.prepare();
-                handler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        adapter.addAll(getGalleryPhotos());
-                        checkImageStatus();
-                    }
-                });
-                Looper.loop();
-            }
-
-            ;
-
-        }.start();
+        LoadPhotoTask loadPhotoTask = new LoadPhotoTask(this, galleryAdapter, pick_loading_pb);
+        loadPhotoTask.execute();
     }
 
     public void updateTitle(int num) {
         setTitle(num + " items selected");
     }
 
-    private void checkImageStatus() {
-        if (adapter.isEmpty()) {
-            pick_iv_no_media.setVisibility(View.VISIBLE);
-        } else {
-            pick_iv_no_media.setVisibility(View.GONE);
-        }
-    }
 
-    private ArrayList<Photo> getGalleryPhotos() {
+    public ArrayList<Photo> getGalleryPhotos() {
         ArrayList<Photo> galleryList = new ArrayList<Photo>();
 
         try {
@@ -133,7 +162,6 @@ public class PickPhotoActivity extends BaseActivityToolbar {
                     MediaStore.Images.Media._ID};
             final String orderBy = MediaStore.Images.Media._ID;
 
-            @SuppressWarnings("deprecation")
             Cursor imagecursor = managedQuery(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns,
                     null, null, orderBy);
@@ -161,27 +189,27 @@ public class PickPhotoActivity extends BaseActivityToolbar {
 
     @Override
     public void onClickNext() {
-        int temp = adapter.getSelectedItem().size();
+        int temp = galleryAdapter.getSelectedItem().size();
         if (PICK_ONE) {
             if (temp == 1) {
                 switch (PICK_IMAGE_POS){
                     case -1:
                         //edit photo
                         Intent i  = new Intent(this,EditActivity.class);
-                        i.putExtra(INTENT_KEY_PICK_ONE_EDIT,adapter.getSelectedItem().get(0).sdcardPath);
+                        i.putExtra(INTENT_KEY_PICK_ONE_EDIT, galleryAdapter.getSelectedItem().get(0).sdcardPath);
                         startActivity(i);
                         break;
                     case -2:
                         //insert double
                         Intent returnIntent2 = new Intent();
-                        returnIntent2.putExtra(Utils.INTENT_KEY_DOUBLE_PATH, adapter.getSelectedItem().get(0).sdcardPath);
+                        returnIntent2.putExtra(Utils.INTENT_KEY_DOUBLE_PATH, galleryAdapter.getSelectedItem().get(0).sdcardPath);
                         setResult(Activity.RESULT_OK, returnIntent2);
                         finish();
                         break;
                     default:
                         //insert photo
                         currentPhotos.remove(PICK_IMAGE_POS);
-                        Utils.currentPhotos.add(PICK_IMAGE_POS, adapter.getSelectedItem().get(0));
+                        Utils.currentPhotos.add(PICK_IMAGE_POS, galleryAdapter.getSelectedItem().get(0));
                         Log.e("cxz", "size:" + currentPhotos.size() + " realsize" + currentPhotos.realSize());
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra(Utils.INTENT_KEY_PICK_POS, PICK_IMAGE_POS);
@@ -198,17 +226,30 @@ public class PickPhotoActivity extends BaseActivityToolbar {
             } else {
                 numOfPhoto = temp;
                 Utils.currentPhotos.clear();
-                Utils.currentPhotos.addAll(adapter.getSelectedItem());
+                Utils.currentPhotos.addAll(galleryAdapter.getSelectedItem());
                 startActivity(new Intent(this, CollageActivity.class));
             }
 
         }
     }
 
+
     @Override
     protected void onClickClear() {
-        adapter.clearSelection();
+        galleryAdapter.clearSelection();
+        selectedPhoto.clear();
         updateTitle(0);
-        adapter.notifyDataSetChanged();
+        selectedAdapter.notifyDataSetChanged();
+        galleryAdapter.notifyDataSetChanged();
+    }
+
+    public void addSelectedPhoto(Photo photo) {
+        selectedPhoto.add(photo);
+        selectedAdapter.notifyDataSetChanged();
+    }
+
+    public void removeSelectedPhoto(Photo photo) {
+        selectedPhoto.remove(photo);
+        selectedAdapter.notifyDataSetChanged();
     }
 }

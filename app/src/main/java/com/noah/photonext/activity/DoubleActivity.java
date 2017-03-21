@@ -4,48 +4,72 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.noah.photonext.MainActivity;
 import com.noah.photonext.R;
+import com.noah.photonext.adapter.DoubleThumbnailAdapter;
 import com.noah.photonext.base.BaseEditActivity;
+import com.noah.photonext.custom.BlurDialogFragment;
 import com.noah.photonext.custom.LLayout;
-import com.noah.photonext.custom.SMat;
-import com.noah.photonext.custom.Touch2;
+import com.noah.photonext.model.DoubleThumbnailObject;
+import com.noah.photonext.task.DoubleThumbnailTask;
 import com.noah.photonext.util.Utils;
 
-import org.opencv.core.Scalar;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 
 import static com.noah.photonext.util.Utils.INTENT_KEY_DOUBLE_PATH;
+import static com.noah.photonext.util.Utils.xfermodes;
 
 /**
  * Created by HuyLV-CT on 12-Jan-17.
  */
 
-public class DoubleActivity extends BaseEditActivity implements View.OnClickListener {
+public class DoubleActivity extends BaseEditActivity implements View.OnClickListener, View.OnTouchListener {
 
+    public int currentType;
     @BindView(R.id.double_main_iv)
     ImageView double_main_iv;
-    @BindView(R.id.double_top_iv)
-    ImageView double_top_iv;
-    @BindView(R.id.double_pick_photo_iv)
-    ImageView double_pick_photo_iv;
-    @BindView(R.id.double_normal)
-    LLayout double_normal;
-    @BindView(R.id.double_white)
-    LLayout double_white;
-    @BindView(R.id.double_black)
-    LLayout double_black;
-    private Bitmap tempBitmap;
-    private Bitmap temp2Bitmap;
-
+    //    @BindView(R.id.double_top_iv)
+//    ImageView double_top_iv;
+//    @BindView(R.id.double_normal)
+//    LLayout double_normal;
+//    @BindView(R.id.double_darken)
+//    LLayout double_darken;
+//    @BindView(R.id.double_multiply)
+//    LLayout double_multiply;
+//    @BindView(R.id.double_screen)
+//    LLayout double_screen;
+//    @BindView(R.id.double_lighten)
+//    LLayout double_lighten;
+    @BindView(R.id.double_browse)
+    LLayout double_browse;
+    //rv
+    @BindView(R.id.double_list_rv)
+    RecyclerView double_list_rv;
+    DoubleThumbnailAdapter doubleThumbnailAdapter;
+    ArrayList<DoubleThumbnailObject> doubleList;
+    boolean dragging;
+    float scaleImage;
+    private Bitmap topBitmap;
+    private Paint paint;
+    private Canvas canvas;
+    private Bitmap currentBm, srcBm, dstBm;
+    private int currentX, currentY, currentW, currentH, startX, startY;
+    private BlurDialogFragment dialog;
+    private boolean firstTime;
+    private DoubleThumbnailTask doubleThumbnailTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,46 +77,111 @@ public class DoubleActivity extends BaseEditActivity implements View.OnClickList
 
         navigation_seek_bar.setAbsoluteMinMaxValue(0, 100);
         navigation_seek_bar.setProgress(100);
-        double_main_iv.setImageBitmap(Utils.historyBitmaps.get(Utils.currentHistoryPos));
+        currentBm = Utils.historyBitmaps.get(Utils.currentHistoryPos);
+        dstBm = currentBm.copy(currentBm.getConfig(), true);
+        double_main_iv.setImageBitmap(currentBm);
 
-        double_pick_photo_iv.setOnClickListener(this);
-        double_normal.setOnClickListener(this);
-        double_black.setOnClickListener(this);
-        double_white.setOnClickListener(this);
+        currentType = -1;
+        paint = new Paint();
+        currentX = 0;
+        currentY = 0;
+        firstTime = true;
+
+        double_browse.setOnClickListener(this);
+        double_main_iv.setOnTouchListener(this);
+
+        //create thumbnail
+
+
+        //rv
+        doubleList = Utils.createDoubleList(getResources());
+        doubleThumbnailAdapter = new DoubleThumbnailAdapter(this, doubleList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        double_list_rv.setAdapter(doubleThumbnailAdapter);
+        double_list_rv.setLayoutManager(linearLayoutManager);
+    }
+
+    void createThumbnail() {
+        Bitmap thumb1 = Bitmap.createScaledBitmap(currentBm, 400, 400, true);
+        Bitmap thumb2 = Bitmap.createScaledBitmap(topBitmap, 400, 400, true);
+        doubleThumbnailTask = new DoubleThumbnailTask(doubleList, doubleThumbnailAdapter);
+        doubleThumbnailTask.execute(thumb1, thumb2);
     }
 
     @Override
-    protected void onSeekBarTracking(int value) {
-        super.onSeekBarTracking(value);
-        double_top_iv.setAlpha((float) value / 100);
+    public void onClickNext() {
+        super.onClickNext();
+    }
+
+    void createPickPhotoDialog() {
+        dialog = new BlurDialogFragment();
+        dialog.fadeIn(DoubleActivity.this, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPickPhoto();
+            }
+        });
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int x = (int) (event.getX() / scaleImage);
+        int y = (int) (event.getY() / scaleImage);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (x < currentX + currentW && x > currentX && y < currentY + currentH && y > currentY) {
+                    dragging = true;
+                    startX = x - currentX;
+                    startY = y - currentY;
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (dragging) {
+                    currentX = x - startX;
+                    currentY = y - startY;
+                    redraw();
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                dragging = false;
+                break;
+        }
+        return true;
+    }
+
+    void openPickPhoto() {
+        Intent i = new Intent(DoubleActivity.this, PickPhotoActivity.class);
+        i.putExtra(Utils.INTENT_KEY_PICK_DOUBLE, "1");
+        startActivityForResult(i, Utils.REQUEST_CODE_PICK_DOUBLE);
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.double_pick_photo_iv:
             case R.id.double_browse:
-                Intent i = new Intent(DoubleActivity.this, PickPhotoActivity.class);
-                i.putExtra(Utils.INTENT_KEY_PICK_DOUBLE, "1");
-                startActivityForResult(i, Utils.REQUEST_CODE_PICK_DOUBLE);
-                break;
-            case R.id.double_black:
-
-                break;
-            case R.id.double_white:
-                SMat mat1 = new SMat();
-                org.opencv.android.Utils.bitmapToMat(tempBitmap, mat1);
-                temp2Bitmap = tempBitmap.copy(Bitmap.Config.ARGB_8888,true);
-                SMat mat2 = new SMat(mat1.size(),mat1.type(),new Scalar(0,0,255,255));
-//                mat1.clearBackground(mat2);
-                MainActivity.native_clearBackground2(mat1.nativeObj,mat2.nativeObj);
-                org.opencv.android.Utils.matToBitmap(mat2, temp2Bitmap);
-                temp2Bitmap.setHasAlpha(true);
-                double_top_iv.setImageBitmap(temp2Bitmap);
-
+                openPickPhoto();
                 break;
         }
+        if (currentType != -1) redraw();
+    }
+
+    public void redraw() {
+        if (topBitmap != null) {
+            dstBm = currentBm.copy(currentBm.getConfig(), true);
+            canvas = new Canvas(dstBm);
+            paint.setXfermode(xfermodes[currentType]);
+            canvas.drawBitmap(topBitmap, currentX, currentY, paint);
+            double_main_iv.setImageBitmap(dstBm);
+        }
+    }
+
+
+    @Override
+    protected void onSeekBarTracking(int value) {
+        super.onSeekBarTracking(value);
+        paint.setAlpha(value);
+        redraw();
     }
 
     @Override
@@ -100,11 +189,20 @@ public class DoubleActivity extends BaseEditActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Utils.REQUEST_CODE_PICK_DOUBLE) {
             if (resultCode == Activity.RESULT_OK) {
-                double_pick_photo_iv.setVisibility(View.GONE);
-//                Picasso.with(this).load(PREPATH + data.getStringExtra(INTENT_KEY_DOUBLE_PATH)).into(double_top_iv);
-                tempBitmap = BitmapFactory.decodeFile(data.getStringExtra(INTENT_KEY_DOUBLE_PATH));
-                double_top_iv.setImageBitmap(tempBitmap);
-                double_top_iv.setOnTouchListener(new Touch2());
+                topBitmap = BitmapFactory.decodeFile(data.getStringExtra(INTENT_KEY_DOUBLE_PATH));
+                dialog.dismiss();
+                //do normal
+                currentType = 0;
+                currentX = (dstBm.getWidth() - topBitmap.getWidth()) / 2;
+                currentY = (dstBm.getHeight() - topBitmap.getHeight()) / 2;
+                currentW = topBitmap.getWidth();
+                currentH = topBitmap.getHeight();
+                dstBm = currentBm.copy(currentBm.getConfig(), true);
+                canvas = new Canvas(dstBm);
+                canvas.drawBitmap(topBitmap, currentX, currentY, paint);
+                double_main_iv.setImageBitmap(dstBm);
+
+                createThumbnail();
             }
         }
     }
@@ -118,22 +216,27 @@ public class DoubleActivity extends BaseEditActivity implements View.OnClickList
         float height = double_main_iv.getDrawable().getIntrinsicHeight();
         float imagevieww = double_main_iv.getWidth();
         float imageviewh = double_main_iv.getHeight();
-        Log.e("cxz", "imagew " + width + "h " + height + " " + imagevieww + " " + imageviewh);
-        float scale;
+        Log.e("cxz", "screen w " + width + "h " + height + " image " + imagevieww + " " + imageviewh);
 
         RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams) double_main_iv.getLayoutParams();
         if (width / height > imagevieww / imageviewh) {
             p.height = (int) (height * imagevieww / width);
-            scale = imagevieww / width;
+            scaleImage = imagevieww / width;
         } else {
             p.width = (int) (width * imageviewh / height);
-            scale = imageviewh / height;
+            scaleImage = imageviewh / height;
         }
         double_main_iv.setLayoutParams(p);
-        double_top_iv.setLayoutParams(p);
         Matrix m = new Matrix();
-        m.postScale(scale, scale);
+        m.postScale(scaleImage, scaleImage);
         double_main_iv.setImageMatrix(m);
+
+
+        //create dialog
+        if (firstTime) {
+            createPickPhotoDialog();
+            firstTime = false;
+        }
     }
 
     @Override
@@ -150,5 +253,4 @@ public class DoubleActivity extends BaseEditActivity implements View.OnClickList
     protected int getLayoutId() {
         return R.layout.activity_double;
     }
-
 }

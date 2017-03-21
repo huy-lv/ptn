@@ -38,6 +38,8 @@
     <declare-styleable name="LLayout">
         <attr name="icon" format="reference"/>
         <attr name="text" format="string"/>
+        <attr name="icon_size" format="dimension" />
+        <attr name="text_size" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="StartSeekBar">

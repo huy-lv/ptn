@@ -8,10 +8,10 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.noah.photonext.util.Utils;
 import com.noah.photonext.activity.CollageActivity;
 import com.noah.photonext.activity.PickPhotoActivity;
 import com.noah.photonext.base.BaseLayout;
+import com.noah.photonext.util.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -59,12 +59,12 @@ public class CustomLayout4and1 extends BaseLayout implements View.OnClickListene
         addView(view);
         touchListener = new Touch(context);
 
-        currentIV = new ArrayList<>();
+        currentIVlist = new ArrayList<>();
 
         for (int i = 0; i < numOfPhoto; i++) {
             int resId = getResources().getIdentifier("iv" + (i + 1), "id", context.getPackageName());
             PentagonIV p = ButterKnife.findById(view, resId);
-            currentIV.add(p);
+            currentIVlist.add(p);
             p.setPos(i);
 
             if (i < Utils.currentPhotos.realSize()) {
@@ -87,9 +87,9 @@ public class CustomLayout4and1 extends BaseLayout implements View.OnClickListene
 
     @Override
     public void setImageForUnassignView(int unassignPos) {
-        Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignPos).sdcardPath).into(currentIV.get(unassignPos));
-        currentIV.get(unassignPos).setOnClickListener(null);
-        currentIV.get(unassignPos).setOnTouchListener(touchListener);
+        Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignPos).sdcardPath).into(currentIVlist.get(unassignPos));
+        currentIVlist.get(unassignPos).setOnClickListener(null);
+        currentIVlist.get(unassignPos).setOnTouchListener(touchListener);
     }
 
     @Override

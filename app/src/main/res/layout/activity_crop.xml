@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_crop"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,48 +17,56 @@
 
         <include
             android:id="@+id/include"
-            layout="@layout/navigation_bar" />
+            layout="@layout/navigation_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sliding_bar_height"
+            android:layout_above="@+id/horizontalScrollView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_bar_second_height"
-            android:layout_above="@+id/include"
+            android:layout_height="@dimen/bottom_bar_height"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/horizontalScrollView">
+            android:layout_alignParentStart="true">
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/bottom_bar_second_height"
                 android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="horizontal">
                 <com.noah.photonext.custom.LLayout
                     android:id="@+id/crop_ratio_free"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
+                    android:layout_width="@dimen/bottom_bar_width_icon"
+                    android:layout_height="@dimen/bottom_bar_height"
                     app:icon="@mipmap/ic_tools_crop_free"
                     app:text="@string/ratio_free"/>
                 <com.noah.photonext.custom.LLayout
                     android:id="@+id/crop_ratio_original"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
+                    android:layout_width="@dimen/bottom_bar_width_icon"
+                    android:layout_height="@dimen/bottom_bar_height"
                     app:icon="@mipmap/ic_tools_crop_original"
                     app:text="@string/ratio_original"/>
                 <com.noah.photonext.custom.LLayout
                     android:id="@+id/crop_ratio_1x1"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
+                    android:layout_width="@dimen/bottom_bar_width_icon"
+                    android:layout_height="@dimen/bottom_bar_height"
                     app:icon="@mipmap/ic_tools_crop_1x1"
                     app:text="@string/ratio_1x1"/>
                 <com.noah.photonext.custom.LLayout
                     android:id="@+id/crop_ratio_4x3"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
+                    android:layout_width="@dimen/bottom_bar_width_icon"
+                    android:layout_height="@dimen/bottom_bar_height"
+                    android:layout_marginLeft="20dp"
                     app:icon="@mipmap/ic_tools_crop_4x3"
                     app:text="@string/ratio_4x3"/>
                 <com.noah.photonext.custom.LLayout
                     android:id="@+id/crop_ratio_16x9"
-                    android:layout_width="@dimen/bottom_bar_second_height"
-                    android:layout_height="@dimen/bottom_bar_second_height"
+                    android:layout_width="@dimen/bottom_bar_width_icon"
+                    android:layout_height="@dimen/bottom_bar_height"
+                    android:layout_marginLeft="20dp"
                     app:icon="@mipmap/ic_tools_crop_16x9"
                     app:text="@string/ratio_16x9"/>
             </LinearLayout>
@@ -68,11 +76,11 @@
             android:id="@+id/crop_main_civ"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:scv_crop_mode="free"
-            android:layout_alignParentTop="true"
+            android:layout_above="@+id/include"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_above="@+id/horizontalScrollView" />
+            android:layout_alignParentTop="true"
+            app:scv_crop_mode="free" />
 
     </RelativeLayout>
 </LinearLayout>

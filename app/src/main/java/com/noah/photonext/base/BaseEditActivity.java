@@ -22,7 +22,7 @@ import static com.noah.photonext.util.Utils.historyBitmaps;
  */
 
 public abstract class BaseEditActivity extends BaseActivityToolbar{
-    @BindView(R.id.navigation_slider)
+    @BindView(R.id.sliding_slider)
     protected StartSeekBar navigation_seek_bar;
     @BindView(R.id.adjustment_seekbar_tv)
     @Nullable
@@ -31,7 +31,7 @@ public abstract class BaseEditActivity extends BaseActivityToolbar{
     @BindView(R.id.edit_main_iv)
     protected ImageViewTouch edit_main_iv;
     protected StartSeekBar.OnSeekBarChangeListener seekBarListener;
-    @BindView(R.id.navigation_cancel_iv)
+    @BindView(R.id.sliding_cancel_iv)
     ImageView navigation_cancel_iv;
     @BindView(R.id.navigation_done_iv)
     ImageView navigation_done_iv;
@@ -90,7 +90,7 @@ public abstract class BaseEditActivity extends BaseActivityToolbar{
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
-            case R.id.navigation_cancel_iv:
+            case R.id.sliding_cancel_iv:
                 onNavigationCancel();
                 break;
             case R.id.navigation_done_iv:

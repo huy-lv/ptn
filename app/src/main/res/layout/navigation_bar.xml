@@ -1,53 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/tools"
     android:id="@+id/crop_navigation_bar"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="@dimen/sliding_bar_height"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
     android:background="@color/edit_background_color_dark"
+    android:clipChildren="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:clipChildren="true"
     android:weightSum="6">
 
     <ImageView
-        android:id="@+id/navigation_cancel_iv"
+        android:id="@+id/sliding_cancel_iv"
         android:layout_width="0dp"
         android:layout_height="@dimen/edit_navigation_bar_icon_height"
         android:layout_marginLeft="@dimen/edit_navigation_bar_margin_left"
         android:layout_marginRight="@dimen/edit_navigation_bar_margin_left"
-        android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@mipmap/ic_cancel" />
-
-    <!--<com.rey.material.widget.Slider-->
-        <!--android:id="@+id/navigation_seek_bar"-->
-        <!--android:layout_weight="4"-->
-        <!--android:layout_width="0dp"-->
-        <!--app:sl_value="100"-->
-        <!--app:sl_maxValue="200"-->
-        <!--app:sl_primaryColor="@android:color/white"-->
-        <!--app:sl_secondaryColor="@android:color/white"-->
-        <!--android:layout_height="wrap_content"/>-->
     <com.noah.photonext.custom.StartSeekBar
-        android:id="@+id/navigation_slider"
+        android:id="@+id/sliding_slider"
         android:layout_width="0dp"
-        android:layout_weight="4"
         android:layout_height="wrap_content"
+        android:layout_weight="4"
         custom:defaultBackgroundColor="@android:color/white"
         custom:defaultBackgroundRangeColor="@color/colorPrimary"        />
     <ImageView
         android:id="@+id/navigation_done_iv"
-        android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_width="0dp"
         android:layout_height="@dimen/edit_navigation_bar_icon_height"
-        android:layout_weight="1"
-        android:layout_marginRight="@dimen/edit_navigation_bar_margin_left"
         android:layout_marginLeft="@dimen/edit_navigation_bar_margin_left"
+        android:layout_marginRight="@dimen/edit_navigation_bar_margin_left"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@mipmap/ic_done"/>
 </LinearLayout>

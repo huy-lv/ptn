@@ -8,10 +8,10 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.noah.photonext.util.Utils;
 import com.noah.photonext.activity.CollageActivity;
 import com.noah.photonext.activity.PickPhotoActivity;
 import com.noah.photonext.base.BaseLayout;
+import com.noah.photonext.util.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
         View view = inflate(context,layoutId, null);
         addView(view);
         touchListener = new Touch(context);
-        currentIV = new ArrayList<>();
+        currentIVlist = new ArrayList<>();
 
         for (int i = 0; i < numOfPhoto; i++) {
             int resId = context.getResources().getIdentifier("iv" + (i + 1), "id", context.getPackageName());
@@ -63,7 +63,7 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
                 BitmapFactory.decodeFile(Utils.currentPhotos.get(i).sdcardPath, options);
-                int newheight = (int) (1080 * options.outHeight / options.outWidth);
+                int newheight = 1080 * options.outHeight / options.outWidth;
 //            Log.e("Cxz","image"+i+" size:"+imageWidth+" "+imageHeight+ " newh"+newheight);
                 Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(i).sdcardPath)
                         .resize(1080, newheight)
@@ -74,7 +74,7 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
                 iv.setOnClickListener(this);
                 iv.setAssigned(false);
             }
-            currentIV.add(iv);
+            currentIVlist.add(iv);
         }
     }
 
@@ -90,7 +90,7 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
 
     @Override
     public void setImageForUnassignView(int unassignPos) {
-        Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignPos).sdcardPath).into(currentIV.get(unassignPos));
-        currentIV.get(unassignPos).setOnTouchListener(touchListener);
+        Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignPos).sdcardPath).into(currentIVlist.get(unassignPos));
+        currentIVlist.get(unassignPos).setOnTouchListener(touchListener);
     }
 }

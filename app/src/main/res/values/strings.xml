@@ -31,6 +31,21 @@
     <string name="blur_linear">Linear</string>
     <string name="double_browse">Browse</string>
     <string name="double_normal">Normal</string>
-    <string name="double_white_background">White</string>
-    <string name="double_black_background">Black</string>
+    <string name="double_darken">Darken</string>
+    <string name="double_multiply">Multiply</string>
+    <string name="double_lighten">Lighten</string>
+    <string name="double_screen">Screen</string>
+    <string name="effect_sepia">Sepia</string>
+    <string name="effect">Effect</string>
+    <string name="overlay">Overlay</string>
+    <string name="stylize">Stylize</string>
+    <string name="deny_message">If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]</string>
+    <string name="adjustment_highlights">Highlights</string>
+    <string name="adjustment_shadows">Shodows</string>
+    <string name="adjustment_saturation">Saturation</string>
+    <string name="adjustment_lightness">Saturation</string>
+    <string name="adjustment_hue">Hue</string>
+    <string name="camera_not_available_message">Camera not available or something went wrong! Please try again later.</string>
+    <string name="camera_create_file_failed">Can not create photo, please try again.</string>
+    <string name="no_photo_found">No photo found!</string>
 </resources>

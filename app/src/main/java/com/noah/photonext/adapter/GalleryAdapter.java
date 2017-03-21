@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -15,23 +14,26 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import cn.refactor.library.SmoothCheckBox;
+
 import static com.noah.photonext.util.Utils.PREPATH;
 import static java.util.ResourceBundle.clearCache;
 
 
 public class GalleryAdapter extends BaseAdapter {
 
-    private Context mContext;
-    private LayoutInflater infalter;
     public ArrayList<Photo> data = new ArrayList<Photo>();
-
+    private PickPhotoActivity mContext;
+    private LayoutInflater infalter;
     private boolean PICK_ONE;
+    private ArrayList<Photo> selectedPhoto;
 
-    public GalleryAdapter(Context c) {
+    public GalleryAdapter(PickPhotoActivity c, ArrayList<Photo> sp) {
         infalter = (LayoutInflater) c
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = c;
         clearCache();
+        selectedPhoto = sp;
     }
 
     public void setPickOne(boolean isPickOne) {
@@ -53,40 +55,6 @@ public class GalleryAdapter extends BaseAdapter {
         return position;
     }
 
-    public void selectAll(boolean selection) {
-        for (int i = 0; i < data.size(); i++) {
-            data.get(i).isSeleted = selection;
-
-        }
-        notifyDataSetChanged();
-    }
-
-    public boolean isAllSelected() {
-        boolean isAllSelected = true;
-
-        for (int i = 0; i < data.size(); i++) {
-            if (!data.get(i).isSeleted) {
-                isAllSelected = false;
-                break;
-            }
-        }
-
-        return isAllSelected;
-    }
-
-    public boolean isAnySelected() {
-        boolean isAnySelected = false;
-
-        for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).isSeleted) {
-                isAnySelected = true;
-                break;
-            }
-        }
-
-        return isAnySelected;
-    }
-
     public ArrayList<Photo> getSelectedItem() {
         ArrayList<Photo> dataT = new ArrayList<Photo>();
 
@@ -99,8 +67,8 @@ public class GalleryAdapter extends BaseAdapter {
         return dataT;
     }
 
-    public void clearSelection(){
-        for(Photo p : data){
+    public void clearSelection() {
+        for (Photo p : data) {
             p.isSeleted = false;
         }
     }
@@ -114,8 +82,6 @@ public class GalleryAdapter extends BaseAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        notifyDataSetChanged();
     }
 
     @Override
@@ -123,33 +89,41 @@ public class GalleryAdapter extends BaseAdapter {
 
         final ViewHolder holder;
         if (convertView == null) {
-
             convertView = infalter.inflate(R.layout.item_photo, null);
             holder = new ViewHolder();
             holder.item_photo_image = (ImageView) convertView
                     .findViewById(R.id.item_photo_image);
-            holder.item_photo_checkbox = (CheckBox) convertView.findViewById(R.id.item_photo_checkbox);
-            holder.item_photo_fl = (FrameLayout)convertView.findViewById(R.id.item_photo_fl);
+            holder.item_photo_checkbox = (SmoothCheckBox) convertView.findViewById(R.id.item_photo_checkbox);
+            holder.item_photo_fl = (FrameLayout) convertView.findViewById(R.id.item_photo_fl);
+            holder.item_photo_checkbox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkChanged(position);
+                }
+            });
+            holder.item_photo_fl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkChanged(position);
+                }
+            });
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.item_photo_image.setTag(position);
 
-        holder.item_photo_checkbox.setChecked(data.get(position).isSeleted);
-        holder.item_photo_fl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkChanged(position);
-            }
-        });
+        if (data.get(position).isSeleted) {
+            if (!holder.item_photo_checkbox.isChecked())
+                holder.item_photo_checkbox.setChecked(true, true);
+        } else holder.item_photo_checkbox.setChecked(false);
 
         try {
             Picasso.with(mContext).load(PREPATH + data.get(position).sdcardPath).placeholder(R.mipmap.no_media).fit().centerCrop().into(holder.item_photo_image);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return convertView;
     }
 
@@ -159,18 +133,22 @@ public class GalleryAdapter extends BaseAdapter {
                 data.get(i).isSeleted = false;
             }
             data.get(pos).isSeleted =true;
+            mContext.addSelectedPhoto(data.get(pos));
         }else{
             data.get(pos).isSeleted = !data.get(pos).isSeleted;
+            if (data.get(pos).isSeleted) mContext.addSelectedPhoto(data.get(pos));
+            else {
+                mContext.removeSelectedPhoto(data.get(pos));
+            }
         }
 
         notifyDataSetChanged();
-
-        ((PickPhotoActivity) mContext).updateTitle(getSelectedItem().size());
+        mContext.updateTitle(getSelectedItem().size());
     }
 
     private class ViewHolder {
         ImageView item_photo_image;
-        CheckBox item_photo_checkbox;
+        SmoothCheckBox item_photo_checkbox;
         FrameLayout item_photo_fl;
     }
 

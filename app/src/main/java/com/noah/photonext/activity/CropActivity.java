@@ -42,8 +42,7 @@ public class CropActivity extends BaseEditActivity implements View.OnClickListen
         crop_ratio_free.setOnClickListener(this);
         crop_ratio_original.setOnClickListener(this);
 
-
-        crop_ratio_free.setSelected();
+        crop_ratio_free.setIconImage(R.mipmap.ic_tools_crop_free_ac);
         crop_main_civ.setCropMode(CropImageView.CropMode.FREE);
     }
 
@@ -59,26 +58,26 @@ public class CropActivity extends BaseEditActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        resetColor();
+        resetImage();
         switch (v.getId()){
             case R.id.crop_ratio_1x1:
-                crop_ratio_1x1.setSelected();
+                crop_ratio_1x1.setIconImage(R.mipmap.ic_tools_crop_1x1_ac);
                 crop_main_civ.setCropMode(CropImageView.CropMode.SQUARE);
                 break;
             case R.id.crop_ratio_4x3:
-                crop_ratio_4x3.setSelected();
+                crop_ratio_4x3.setIconImage(R.mipmap.ic_tools_crop_4x3_ac);
                 crop_main_civ.setCropMode(CropImageView.CropMode.RATIO_4_3);
                 break;
             case R.id.crop_ratio_16x9:
-                crop_ratio_16x9.setSelected();
+                crop_ratio_16x9.setIconImage(R.mipmap.ic_tools_crop_16x9_ac);
                 crop_main_civ.setCropMode(CropImageView.CropMode.RATIO_16_9);
                 break;
             case R.id.crop_ratio_free:
-                crop_ratio_free.setSelected();
+                crop_ratio_free.setIconImage(R.mipmap.ic_tools_crop_free_ac);
                 crop_main_civ.setCropMode(CropImageView.CropMode.FREE);
                 break;
             case R.id.crop_ratio_original:
-                crop_ratio_original.setSelected();
+                crop_ratio_original.setIconImage(R.mipmap.ic_tools_crop_original_ac);
                 crop_main_civ.setCropMode(CropImageView.CropMode.FIT_IMAGE);
                 break;
         }
@@ -99,6 +98,14 @@ public class CropActivity extends BaseEditActivity implements View.OnClickListen
         crop_ratio_original.clearColor();
         crop_ratio_4x3.clearColor();
         crop_ratio_1x1.clearColor();
+    }
+
+    void resetImage() {
+        crop_ratio_16x9.setIconImage(R.mipmap.ic_tools_crop_16x9);
+        crop_ratio_free.setIconImage(R.mipmap.ic_tools_crop_free);
+        crop_ratio_original.setIconImage(R.mipmap.ic_tools_crop_original);
+        crop_ratio_4x3.setIconImage(R.mipmap.ic_tools_crop_4x3);
+        crop_ratio_1x1.setIconImage(R.mipmap.ic_tools_crop_1x1);
     }
 
     @Override
