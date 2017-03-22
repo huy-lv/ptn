@@ -59,7 +59,7 @@
 //    LayoutInflater layoutInflater;
 //    @BindView(R.id.collage_main)
 //    FrameLayout collage_main;
-//    BaseLayout collage_main_fllll;
+//    BaseLayout collage_main_fl_container;
 //    Touch touchListener;
 //
 //    @BindView(R.id.collage_choose_layout_iv)
@@ -167,11 +167,11 @@
 //            currentLayoutId = second;
 //            collage_main.removeAllViews();
 //            if (standard) {
-//                collage_main_fllll = new StandardLayout(this, first, second);
+//                collage_main_fl_container = new StandardLayout(this, first, second);
 //            } else {
-//                collage_main_fllll = new CustomLayout4and1(this, first, second);
+//                collage_main_fl_container = new CustomLayout4and1(this, first, second);
 //            }
-//            collage_main.addView(collage_main_fllll);
+//            collage_main.addView(collage_main_fl_container);
 //        }
 //    }
 //
@@ -212,7 +212,7 @@
 //                collage_main.setLayoutParams(lp);
 //                break;
 //            case R.id.collage_padding_sb:
-//                for (ShapedImageView iv : collage_main_fllll.currentIVlist) {
+//                for (ShapedImageView iv : collage_main_fl_container.currentIVlist) {
 //                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 //                            LinearLayout.LayoutParams.WRAP_CONTENT,
 //                            LinearLayout.LayoutParams.WRAP_CONTENT
@@ -224,8 +224,8 @@
 //
 //                break;
 //            case R.id.collage_corner_sb:
-//                for (int i = 0; i < collage_main_fllll.currentIVlist.size(); i++) {
-//                    ((RectangleIV) collage_main_fllll.currentIVlist.get(i)).setCornerRadius(progress);
+//                for (int i = 0; i < collage_main_fl_container.currentIVlist.size(); i++) {
+//                    ((RectangleIV) collage_main_fl_container.currentIVlist.get(i)).setCornerRadius(progress);
 //                }
 //                break;
 //        }
@@ -280,7 +280,7 @@
 //        if (requestCode == Utils.REQUEST_CODE_PICK_ONE) {
 //            if (resultCode == Activity.RESULT_OK) {
 //                int unassignPos = data.getIntExtra(INTENT_KEY_PICK_POS, -1);
-//                collage_main_fllll.setImageForUnassignView(unassignPos);
+//                collage_main_fl_container.setImageForUnassignedView(unassignPos);
 //            }
 //        }
 //    }
@@ -376,7 +376,7 @@
 //    }
 //
 //    public void showHideBorder(int vId) {
-//        for (ShapedImageView v : collage_main_fllll.currentIVlist) {
+//        for (ShapedImageView v : collage_main_fl_container.currentIVlist) {
 //            if (vId == v.getId()) v.setShowBorder(true);
 //            else v.setShowBorder(false);
 //        }

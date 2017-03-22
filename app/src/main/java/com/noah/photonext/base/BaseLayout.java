@@ -35,6 +35,6 @@ public abstract class BaseLayout extends FrameLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public abstract void setImageForUnassignView(int unassignPos);
+    public abstract void setImageForUnassignedView(int unassignPos);
 
 }

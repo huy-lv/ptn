@@ -72,7 +72,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
     @BindView(R.id.collage_main)
     FrameLayout collage_main;
     //layout dc add vao collage_main sau khi chon layout
-    BaseLayout collage_main_fllll;
+    BaseLayout collage_main_fl_container;
     Touch touchListener;
 
     @BindView(R.id.collage_choose_layout_iv)
@@ -210,11 +210,11 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
             currentLayoutId = second;
             collage_main.removeAllViews();
             if (standard) {
-                collage_main_fllll = new StandardLayout(this, first, second);
+                collage_main_fl_container = new StandardLayout(this, first, second);
             } else {
-                collage_main_fllll = new CustomLayout4and1(this, first, second);
+                collage_main_fl_container = new CustomLayout4and1(this, first, second);
             }
-            collage_main.addView(collage_main_fllll);
+            collage_main.addView(collage_main_fl_container);
         }
     }
 
@@ -347,11 +347,8 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
         if (margin != newMargin) {
             newMargin = margin;
             collage_seekbar_tv.setText(String.valueOf(margin));
-            for (ShapedImageView iv : collage_main_fllll.currentIVlist) {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
+            for (ShapedImageView iv : collage_main_fl_container.currentIVlist) {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) iv.getLayoutParams();
                 params.setMargins(margin, margin, margin, margin);
                 iv.setLayoutParams(params);
             }
@@ -363,14 +360,15 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
         if (corner != newCorner) {
             newCorner = corner;
             collage_seekbar_tv.setText(String.valueOf(corner));
-            for (int i = 0; i < collage_main_fllll.currentIVlist.size(); i++) {
-                ((RectangleIV) collage_main_fllll.currentIVlist.get(i)).setCornerRadius(corner);
+            for (int i = 0; i < collage_main_fl_container.currentIVlist.size(); i++) {
+                ((RectangleIV) collage_main_fl_container.currentIVlist.get(i)).setCornerRadius(corner);
             }
         }
 
         //ratio
         if (ratio != newRatio) {
             newRatio = ratio;
+            collage_seekbar_tv.setText(String.valueOf(ratio));
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) collage_main.getLayoutParams();
             if (newRatio >= 0) {
                 lp.width = originCollageWidth - (ratio * 10);
@@ -416,7 +414,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
         if (requestCode == Utils.REQUEST_CODE_PICK_ONE) {
             if (resultCode == Activity.RESULT_OK) {
                 int unassignPos = data.getIntExtra(INTENT_KEY_PICK_POS, -1);
-                collage_main_fllll.setImageForUnassignView(unassignPos);
+                collage_main_fl_container.setImageForUnassignedView(unassignPos);
             }
         }
     }
@@ -470,7 +468,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
             fos.close();
 
         } catch (FileNotFoundException e) {
-            Log.e("GREC", e.getMessage(), e);
+            Log.e("cxz", e.getMessage(), e);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -507,7 +505,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
     }
 
     public void showHideBorder(int vId) {
-        for (ShapedImageView v : collage_main_fllll.currentIVlist) {
+        for (ShapedImageView v : collage_main_fl_container.currentIVlist) {
             if (vId == v.getId()) v.setShowBorder(true);
             else v.setShowBorder(false);
         }

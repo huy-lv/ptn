@@ -86,7 +86,7 @@ public class CustomLayout4and1 extends BaseLayout implements View.OnClickListene
     }
 
     @Override
-    public void setImageForUnassignView(int unassignPos) {
+    public void setImageForUnassignedView(int unassignPos) {
         Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignPos).sdcardPath).into(currentIVlist.get(unassignPos));
         currentIVlist.get(unassignPos).setOnClickListener(null);
         currentIVlist.get(unassignPos).setOnTouchListener(touchListener);

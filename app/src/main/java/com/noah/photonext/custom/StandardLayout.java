@@ -51,7 +51,6 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
         int layoutId = context.getResources().getIdentifier("layout" + first + "_" + second, "layout", context.getPackageName());
         View view = inflate(context,layoutId, null);
         addView(view);
-        touchListener = new Touch(context);
         currentIVlist = new ArrayList<>();
 
         for (int i = 0; i < numOfPhoto; i++) {
@@ -68,7 +67,7 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
                 Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(i).sdcardPath)
                         .resize(1080, newheight)
                         .into(iv);
-                iv.setOnTouchListener(touchListener);
+                iv.setOnTouchListener(new Touch(context));
                 iv.setAssigned(true);
             } else {
                 iv.setOnClickListener(this);
@@ -89,8 +88,8 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
     }
 
     @Override
-    public void setImageForUnassignView(int unassignPos) {
-        Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignPos).sdcardPath).into(currentIVlist.get(unassignPos));
-        currentIVlist.get(unassignPos).setOnTouchListener(touchListener);
+    public void setImageForUnassignedView(int unassignedPos) {
+        Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignedPos).sdcardPath).into(currentIVlist.get(unassignedPos));
+        currentIVlist.get(unassignedPos).setOnTouchListener(touchListener);
     }
 }

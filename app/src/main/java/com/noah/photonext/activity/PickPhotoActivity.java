@@ -10,10 +10,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -53,7 +53,7 @@ public class PickPhotoActivity extends BaseActivityToolbar {
     public LinearLayout pick_iv_no_media;
     ArrayList<Photo> selectedPhoto = new ArrayList<>();
     @BindView(R.id.pick_gv)
-    GridView pick_gv;
+    RecyclerView pick_gv;
     @BindView(R.id.pick_selected_rv)
     RecyclerView pick_selected_rv;
     @BindView(R.id.pick_loading_pb)
@@ -137,12 +137,12 @@ public class PickPhotoActivity extends BaseActivityToolbar {
         }
     }
     private void init() {
-        pick_gv.setFastScrollEnabled(true);
+
         int noOfColumns = calculateNoOfColumns(this);
-        pick_gv.setNumColumns(noOfColumns);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, noOfColumns);
+        pick_gv.setLayoutManager(gridLayoutManager);
         galleryAdapter = new GalleryAdapter(this, selectedPhoto);
         galleryAdapter.setPickOne(PICK_ONE);
-
         pick_gv.setAdapter(galleryAdapter);
 
         LoadPhotoTask loadPhotoTask = new LoadPhotoTask(this, galleryAdapter, pick_loading_pb);

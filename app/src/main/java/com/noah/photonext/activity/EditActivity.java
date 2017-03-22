@@ -276,7 +276,7 @@ public class EditActivity extends BaseActivityToolbar implements View.OnClickLis
 
     @Override
     public void onClickNext() {
-        startActivityForResult(new Intent(this, BlurActivity.class), Utils.REQUEST_CODE_BLUR);
+        //finish...
     }
 
     @Override

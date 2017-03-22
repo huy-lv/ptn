@@ -9,13 +9,12 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * Created by HuyLV-CT on 23-Nov-16.
  */
 
-public abstract class ShapedImageView extends ImageView {
+public abstract class ShapedImageView extends android.support.v7.widget.AppCompatImageView {
     private Paint mPathPaint;
     private Path mPath;
     private boolean isAssigned;
@@ -23,24 +22,7 @@ public abstract class ShapedImageView extends ImageView {
     private Path mBorderPath;
     private boolean showBorder;
     private int borderWidth;
-
-    public int getPos() {
-        return pos;
-    }
-
-    public void setPos(int pos) {
-        this.pos = pos;
-    }
-
     private int pos;
-
-    public boolean isAssigned() {
-        return isAssigned;
-    }
-
-    public void setAssigned(boolean assigned) {
-        isAssigned = assigned;
-    }
 
     public ShapedImageView(Context context) {
         super(context);
@@ -55,6 +37,22 @@ public abstract class ShapedImageView extends ImageView {
     public ShapedImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
+    }
+
+    public boolean isAssigned() {
+        return isAssigned;
+    }
+
+    public void setAssigned(boolean assigned) {
+        isAssigned = assigned;
     }
 
     private void init() {
@@ -102,13 +100,13 @@ public abstract class ShapedImageView extends ImageView {
         }
     }
 
+    public boolean isShowBorder() {
+        return showBorder;
+    }
+
     public void setShowBorder(boolean showBorder) {
         this.showBorder = showBorder;
         invalidate();
-    }
-
-    public boolean isShowBorder() {
-        return showBorder;
     }
 
     public int getBorderWidth() {
