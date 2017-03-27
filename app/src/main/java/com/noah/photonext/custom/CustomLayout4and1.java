@@ -57,7 +57,6 @@ public class CustomLayout4and1 extends BaseLayout implements View.OnClickListene
         int layoutId = context.getResources().getIdentifier("custom" + first + "_" + second, "layout", context.getPackageName());
         View view = inflate(context, layoutId, null);
         addView(view);
-        touchListener = new Touch(context);
 
         currentIVlist = new ArrayList<>();
 
@@ -76,7 +75,7 @@ public class CustomLayout4and1 extends BaseLayout implements View.OnClickListene
 //                        .centerCrop()
                         .resize(1080, newheight)
                         .into(p);
-                p.setOnTouchListener(touchListener);
+                p.setOnTouchListener(new Touch(context));
                 p.setAssigned(true);
             } else {
                 p.setOnClickListener(this);
@@ -89,7 +88,7 @@ public class CustomLayout4and1 extends BaseLayout implements View.OnClickListene
     public void setImageForUnassignedView(int unassignPos) {
         Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignPos).sdcardPath).into(currentIVlist.get(unassignPos));
         currentIVlist.get(unassignPos).setOnClickListener(null);
-        currentIVlist.get(unassignPos).setOnTouchListener(touchListener);
+        currentIVlist.get(unassignPos).setOnTouchListener(new Touch(context));
     }
 
     @Override

@@ -114,49 +114,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.PhotoVie
         }
     }
 
-//    @Override
-//    public View getView(final int position, View convertView, ViewGroup parent) {
-//
-//        final ViewHolder holder;
-//        if (convertView == null) {
-//            convertView = infalter.inflate(R.layout.item_photo, null);
-//            holder = new ViewHolder();
-//            holder.item_photo_image = (ImageView) convertView
-//                    .findViewById(R.id.item_photo_image);
-//            holder.item_photo_checkbox = (SmoothCheckBox) convertView.findViewById(R.id.item_photo_checkbox);
-//            holder.item_photo_fl = (FrameLayout) convertView.findViewById(R.id.item_photo_fl);
-//            holder.item_photo_checkbox.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    checkChanged(position);
-//                }
-//            });
-//            holder.item_photo_fl.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    checkChanged(position);
-//                }
-//            });
-//
-//            convertView.setTag(holder);
-//        } else {
-//            holder = (ViewHolder) convertView.getTag();
-//        }
-//        holder.item_photo_image.setTag(position);
-//
-//        if (data.get(position).isSeleted) {
-//            if (!holder.item_photo_checkbox.isChecked())
-//                holder.item_photo_checkbox.setChecked(true, true);
-//        } else holder.item_photo_checkbox.setChecked(false);
-//
-//        try {
-//            Picasso.with(mContext).load(PREPATH + data.get(position).sdcardPath).placeholder(R.mipmap.no_media).fit().centerCrop().into(holder.item_photo_image);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return convertView;
-//    }
-
     public boolean isEmpty() {
         return data.size() == 0;
     }
@@ -167,16 +124,17 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.PhotoVie
                 data.get(i).isSeleted = false;
             }
             data.get(pos).isSeleted =true;
-            mContext.addSelectedPhoto(data.get(pos));
+            mContext.chooseSelectedPhoto(data.get(pos));
+            notifyDataSetChanged();
         }else{
             data.get(pos).isSeleted = !data.get(pos).isSeleted;
             if (data.get(pos).isSeleted) mContext.addSelectedPhoto(data.get(pos));
             else {
                 mContext.removeSelectedPhoto(data.get(pos));
             }
+            notifyItemChanged(pos);
         }
 
-        notifyItemChanged(pos);
         mContext.updateTitle(getSelectedItem().size());
     }
 

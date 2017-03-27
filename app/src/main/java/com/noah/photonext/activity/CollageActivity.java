@@ -96,8 +96,8 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
     RecyclerView bottom_bar_layout;
     LayoutAdapter layoutAdapter;
 
-    @BindView(R.id.bottom_bar_edge)
-    LinearLayout bottom_bar_edge;
+    @BindView(R.id.bottom_bar_corner_content)
+    LinearLayout bottom_bar_cornen_content;
     @BindView(R.id.bottom_bar_color)
     LinearLayout bottom_bar_color;
 
@@ -134,7 +134,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
 
     ArrayList<LayoutObject> layoutList;
 
-    ArrayList<Integer> unassignPhotosId;
+    ArrayList<Integer> unassignedPhotosId;
     int currentMargin = 0;
     int currentCorner = 0;
     int currentRatio = 0;
@@ -144,6 +144,8 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
     private File imagePath;
     private int currentLayoutId;
     private int seekbarType = 0;
+    private boolean isStandard;
+    private boolean isChangingCorner;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -153,9 +155,9 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
         //listener
         touchListener = new Touch(this);
         layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        unassignPhotosId = new ArrayList<>();
+        unassignedPhotosId = new ArrayList<>();
         if (numOfPhoto == 4) {
-            changeLayout(numOfPhoto, 1, false);
+            changeLayout(numOfPhoto, 7, false);
         } else {
             changeLayout(numOfPhoto, 1, true);
         }
@@ -209,6 +211,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
             numOfPhoto = first;
             currentLayoutId = second;
             collage_main.removeAllViews();
+            isStandard = standard;
             if (standard) {
                 collage_main_fl_container = new StandardLayout(this, first, second);
             } else {
@@ -226,9 +229,10 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
 
 
     void showHidePanel(int n) {
+        bottom_bar_corner.setVisibility(isStandard ? View.VISIBLE : View.GONE);
         bottom_bar_layout.setVisibility(n == 0 ? View.VISIBLE : View.GONE);
         collage_choose_layout_iv.setImageResource(n == 0 ? R.mipmap.ic_collage_setup1_ac : R.mipmap.ic_collage_setup1);
-        bottom_bar_edge.setVisibility(n == 1 ? View.VISIBLE : View.GONE);
+        bottom_bar_cornen_content.setVisibility(n == 1 ? View.VISIBLE : View.GONE);
         collage_corner_iv.setImageResource(n == 1 ? R.mipmap.ic_collage_setup2_ac : R.mipmap.ic_collage_setup2);
         bottom_bar_color.setVisibility(n == 2 ? View.VISIBLE : View.GONE);
         collage_border_color_iv.setImageResource(n == 2 ? R.mipmap.ic_collage_setup3_ac : R.mipmap.ic_collage_setup3);
@@ -307,13 +311,13 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
                 break;
             //////////////////////////////// in tab 2
             case R.id.bottom_bar_margin:
-                showSeekBar(0);
+                goToChangingCorner(0);
                 break;
             case R.id.bottom_bar_corner:
-                showSeekBar(1);
+                goToChangingCorner(1);
                 break;
             case R.id.bottom_bar_ratio:
-                showSeekBar(2);
+                goToChangingCorner(2);
                 break;
 
 
@@ -326,6 +330,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
                 bottom_bar_corner.setIconImage(R.mipmap.ic_collage_setup2);
                 bottom_bar_ratio.setIconImage(R.mipmap.ic_collage_setup2_2);
                 changeSize(currentMargin, currentCorner, currentRatio);
+                isChangingCorner = false;
                 break;
             case R.id.bottom_bar_padding_sb_done:
                 bottom_bar_second2.setVisibility(View.INVISIBLE);
@@ -337,6 +342,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
                 currentMargin = newMargin;
                 currentCorner = newCorner;
                 currentRatio = newRatio;
+                isChangingCorner = false;
                 break;
         }
     }
@@ -352,8 +358,6 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
                 params.setMargins(margin, margin, margin, margin);
                 iv.setLayoutParams(params);
             }
-
-
         }
 
         //corner
@@ -381,31 +385,40 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
         }
     }
 
-    private void showSeekBar(int i) {
-        hideToolbarButton();
-        bottom_bar_second2.setVisibility(View.VISIBLE);
-        bottom_bar_second1.setVisibility(View.INVISIBLE);
+    private void goToChangingCorner(int i) {
         seekbarType = i;
+        if (!isChangingCorner) {
+            hideToolbarButton();
+            bottom_bar_second2.setVisibility(View.VISIBLE);
+            bottom_bar_second1.setVisibility(View.INVISIBLE);
+            newMargin = currentMargin;
+            newCorner = currentCorner;
+            newRatio = currentRatio;
+            isChangingCorner = true;
+            showSeekBar();
+        } else {
+            showSeekBar();
+        }
+    }
+
+    void showSeekBar() {
         bottom_bar_padding.setIconImage(seekbarType == 0 ? R.mipmap.ic_collage_setup2_1_ac : R.mipmap.ic_collage_setup2_1);
         bottom_bar_corner.setIconImage(seekbarType == 1 ? R.mipmap.ic_collage_setup2_ac : R.mipmap.ic_collage_setup2);
         bottom_bar_ratio.setIconImage(seekbarType == 2 ? R.mipmap.ic_collage_setup2_2_ac : R.mipmap.ic_collage_setup2_2);
-
-        switch (i) {
+        switch (seekbarType) {
             case 0:
-                newMargin = currentMargin;
                 collage_change_size_sb.setAbsoluteMinMaxValue(0, 100);
-                collage_change_size_sb.setProgress(currentMargin);
+                collage_change_size_sb.setProgress(newMargin);
                 break;
             case 1:
                 collage_change_size_sb.setAbsoluteMinMaxValue(0, 100);
-                collage_change_size_sb.setProgress(currentCorner);
+                collage_change_size_sb.setProgress(newCorner);
                 break;
             case 2:
                 collage_change_size_sb.setAbsoluteMinMaxValue(-80, 80);
-                collage_change_size_sb.setProgress(currentRatio);
+                collage_change_size_sb.setProgress(newRatio);
                 break;
         }
-
     }
 
     @Override

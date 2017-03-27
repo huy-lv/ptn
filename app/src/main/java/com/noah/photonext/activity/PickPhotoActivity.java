@@ -248,6 +248,12 @@ public class PickPhotoActivity extends BaseActivityToolbar {
         selectedAdapter.notifyDataSetChanged();
     }
 
+    public void chooseSelectedPhoto(Photo p) {
+        selectedPhoto.clear();
+        selectedPhoto.add(p);
+        selectedAdapter.notifyDataSetChanged();
+    }
+
     public void removeSelectedPhoto(Photo photo) {
         selectedPhoto.remove(photo);
         selectedAdapter.notifyDataSetChanged();

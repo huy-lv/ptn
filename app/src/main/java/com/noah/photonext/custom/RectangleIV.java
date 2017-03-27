@@ -71,7 +71,6 @@ public class RectangleIV extends ShapedImageView {
         mBorderPath.lineTo(p12.x,p12.y);
         mBorderPath.quadTo(p10.x,p10.y,p11.x,p11.y);
         mBorderPath.close();
-
     }
 
     @Override

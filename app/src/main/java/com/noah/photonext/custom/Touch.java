@@ -15,23 +15,15 @@ import static com.noah.photonext.util.Utils.canvasHeight;
 import static com.noah.photonext.util.Utils.canvasWidth;
 
 public class Touch implements OnTouchListener {
-    CollageActivity context;
-    public Touch(){
-
-    }
-
-    public Touch(CollageActivity c){
-        context = c;
-    }
-
-    // These matrices will be used to move and zoom image
-    Matrix matrix = new Matrix();
-    Matrix savedMatrix = new Matrix();
-
     // We can be in one of these 3 states
     static final int NONE = 0;
     static final int DRAG = 1;
     static final int ZOOM = 2;
+    public static float degree = 0.0f;
+    CollageActivity context;
+    // These matrices will be used to move and zoom image
+    Matrix matrix = new Matrix();
+    Matrix savedMatrix = new Matrix();
     int currentMode = NONE;
 
     // Remember some things for zooming
@@ -41,11 +33,26 @@ public class Touch implements OnTouchListener {
     float d = 0f;
     float[] lastEvent = null;
     float newRot = 0f;
-    public static float degree = 0.0f;
     private int actW;
     private int actH;
     private int origW;
     private int origH;
+
+    public Touch(CollageActivity c) {
+        context = c;
+    }
+
+    /**
+     * Determine the degree between the first two fingers
+     */
+    private static float rotation(MotionEvent event) {
+        double delta_x = (event.getX(0) - event.getX(1));
+        double delta_y = (event.getY(0) - event.getY(1));
+        double radians = Math.atan2(delta_y, delta_x);
+        // if (Constant.TRACE) Log.d("Rotation ~~~~~~~~~~~~~~~~~",
+        // delta_x+" ## "+delta_y+" ## "+radians+" ## "+Math.toDegrees(radians));
+        return (float) Math.toDegrees(radians);
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -59,7 +66,7 @@ public class Touch implements OnTouchListener {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 savedMatrix.set(matrix);
-                    canvasWidth = view.getWidth();
+                canvasWidth = view.getWidth();
                 canvasHeight = view.getHeight();
 //                Log.e("cxz", "down" + view.getWidth() + " " + view.getHeight());
                 start.set(event.getX(), event.getY());
@@ -95,7 +102,7 @@ public class Touch implements OnTouchListener {
                 if (currentMode == DRAG) {
                     float[] temp2 = new float[9];
                     float deltaX = event.getX() - start.x;
-                    float deltaY = event.getY() - start.y;;
+                    float deltaY = event.getY() - start.y;
                     savedMatrix.getValues(temp2);
 //                    Log.e("cxz", "matrix:" + matrix + " delta" + deltaX + " " + deltaY);
                     matrix.set(savedMatrix);
@@ -197,17 +204,5 @@ public class Touch implements OnTouchListener {
         float x = event.getX(0) + event.getX(1);
         float y = event.getY(0) + event.getY(1);
         point.set(x / 2, y / 2);
-    }
-
-    /**
-     * Determine the degree between the first two fingers
-     */
-    private static float rotation(MotionEvent event) {
-        double delta_x = (event.getX(0) - event.getX(1));
-        double delta_y = (event.getY(0) - event.getY(1));
-        double radians = Math.atan2(delta_y, delta_x);
-        // if (Constant.TRACE) Log.d("Rotation ~~~~~~~~~~~~~~~~~",
-        // delta_x+" ## "+delta_y+" ## "+radians+" ## "+Math.toDegrees(radians));
-        return (float) Math.toDegrees(radians);
     }
 }  

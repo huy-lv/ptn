@@ -21,6 +21,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.Toast;
 
 import com.noah.photonext.R;
 import com.noah.photonext.activity.AdjustmentActivity;
@@ -346,4 +347,7 @@ public class Utils {
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
+    public static void showT(Context c, String me) {
+        Toast.makeText(c, me, Toast.LENGTH_SHORT).show();
+    }
 }

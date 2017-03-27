@@ -14,6 +14,8 @@ import com.noah.photonext.model.LayoutObject;
 
 import java.util.ArrayList;
 
+import static com.noah.photonext.util.Utils.showT;
+
 /**
  * Created by huylv on 14-Mar-17.
  */
@@ -43,13 +45,15 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.LayoutView
         holder.item_layout_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (position < 5) {
+                if (position < 5 || position > 14) {
                     for (LayoutObject ll : layoutArrayList) {
                         ll.selected = false;
                     }
                     l.selected = true;
                     c.changeLayout(l.first, l.second, l.standard);
                     notifyDataSetChanged();
+                } else {
+                    showT(c, "Coming soon!");
                 }
             }
         });

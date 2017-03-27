@@ -62,9 +62,10 @@
                 android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
             <LinearLayout
-                android:id="@+id/bottom_bar_edge"
+                android:id="@+id/bottom_bar_corner_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="3">
 
