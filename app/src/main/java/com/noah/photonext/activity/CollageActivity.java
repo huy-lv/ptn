@@ -5,10 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -40,6 +36,7 @@ import com.noah.photonext.custom.SquareLayout;
 import com.noah.photonext.custom.StandardLayout;
 import com.noah.photonext.custom.StartSeekBar;
 import com.noah.photonext.custom.Touch;
+import com.noah.photonext.model.BackgroundValue;
 import com.noah.photonext.model.LayoutObject;
 import com.noah.photonext.util.Utils;
 
@@ -135,7 +132,8 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
     ArrayList<LayoutObject> layoutList;
 
     ArrayList<Integer> unassignedPhotosId;
-    int currentMargin = 0;
+    //intial margin always 5
+    int currentMargin = 5;
     int currentCorner = 0;
     int currentRatio = 0;
     int newMargin = 0;
@@ -238,15 +236,14 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
         collage_border_color_iv.setImageResource(n == 2 ? R.mipmap.ic_collage_setup3_ac : R.mipmap.ic_collage_setup3);
     }
 
-    public void changeBackground(String color) {
-        collage_main.setBackgroundColor(Color.parseColor(color));
-    }
+    public void changeBackground(BackgroundValue backgroundValue) {
+//        collage_main_fl_container.changeBackgroundColor(resId);
+//        collage_main.setBackgroundResource(resId);
+//        BitmapDrawable b = new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), resId));
+//        b.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+//        collage_main.setBackground(b);
 
-    public void changeBackground(int resId) {
-        collage_main.setBackgroundResource(resId);
-        BitmapDrawable b = new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), resId));
-        b.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-        collage_main.setBackground(b);
+        collage_main_fl_container.changeBackgroundColor(backgroundValue);
     }
 
     @Override

@@ -6,7 +6,9 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.noah.photonext.activity.CollageActivity;
 import com.noah.photonext.activity.PickPhotoActivity;
@@ -26,12 +28,16 @@ import static com.noah.photonext.util.Utils.numOfPhoto;
 
 public class StandardLayout extends BaseLayout implements View.OnClickListener {
     CollageActivity context;
+    int first, second;
     private Touch touchListener;
 
     public StandardLayout(CollageActivity context, int first, int second) {
         super(context);
         this.context = context;
-        init(first,second);
+        this.first = first;
+        this.second = second;
+
+        init();
     }
 
     public StandardLayout(Context context, AttributeSet attrs) {
@@ -47,7 +53,7 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    void init(int first, int second){
+    void init() {
         int layoutId = context.getResources().getIdentifier("layout" + first + "_" + second, "layout", context.getPackageName());
         View view = inflate(context,layoutId, null);
         addView(view);
@@ -91,5 +97,22 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
     public void setImageForUnassignedView(int unassignedPos) {
         Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignedPos).sdcardPath).into(currentIVlist.get(unassignedPos));
         currentIVlist.get(unassignedPos).setOnTouchListener(touchListener);
+    }
+
+    public ArrayList<LinearLayout> getBackgroundList() {
+        ArrayList<LinearLayout> viewList = new ArrayList<>();
+        int i = 1;
+        while (i <= first) {
+            int viewId = context.getResources().getIdentifier("background" + i, "id", context.getPackageName());
+            if (viewId != 0) {
+                LinearLayout back = (LinearLayout) findViewById(viewId);
+                if (back != null) viewList.add(back);
+                else Log.e("cxz", "background " + i + " null");
+            } else {
+                break;
+            }
+            i++;
+        }
+        return viewList;
     }
 }

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.noah.photonext.R;
 import com.noah.photonext.activity.CollageActivity;
+import com.noah.photonext.model.BackgroundValue;
 
 import java.util.ArrayList;
 
@@ -50,7 +51,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorVH> {
             holder.iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    context.changeBackground(colors.get(position));
+                    context.changeBackground(new BackgroundValue(colors.get(position)));
                 }
             });
         } else {
@@ -59,7 +60,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorVH> {
             holder.iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    context.changeBackground(id);
+                    context.changeBackground(new BackgroundValue(id));
                 }
             });
         }
