@@ -257,6 +257,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
 
     @Override
     public void onClickNext() {
+        showHideBorder(0);
         Intent i = new Intent(this, EditActivity.class);
         currentBitmap = takeScreenshot();
         historyBitmaps.add(currentBitmap);
@@ -510,8 +511,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
 
     public void showHideBorder(int vId) {
         for (ShapedImageView v : collage_main_fl_container.currentIVlist) {
-            if (vId == v.getId()) v.setShowBorder(true);
-            else v.setShowBorder(false);
+            v.setShowBorder(vId == v.getId());
         }
     }
 
