@@ -44,7 +44,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.2.1'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile project(':colorchooser')
+    compile 'com.github.QuadFlask:colorpicker:0.0.13'
     compile 'gun0912.ted:tedpermission:1.0.2'
     compile 'com.isseiaoki:simplecropview:1.1.1'
     compile project(':imageviewtouch')

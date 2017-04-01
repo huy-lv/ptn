@@ -166,7 +166,7 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
         collage_border_color_iv.setOnClickListener(this);
 
         //layout list
-        layoutList = Utils.createListt();
+        layoutList = Utils.createLayoutList();
         layoutAdapter = new LayoutAdapter(this, layoutList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.HORIZONTAL, false);
         bottom_bar_layout.setLayoutManager(gridLayoutManager);
@@ -236,14 +236,8 @@ public class CollageActivity extends BaseActivityToolbar implements StartSeekBar
         collage_border_color_iv.setImageResource(n == 2 ? R.mipmap.ic_collage_setup3_ac : R.mipmap.ic_collage_setup3);
     }
 
-    public void changeBackground(BackgroundValue backgroundValue) {
-//        collage_main_fl_container.changeBackgroundColor(resId);
-//        collage_main.setBackgroundResource(resId);
-//        BitmapDrawable b = new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), resId));
-//        b.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-//        collage_main.setBackground(b);
-
-        collage_main_fl_container.changeBackgroundColor(backgroundValue);
+    public void changeBackground(boolean isTypeColor, BackgroundValue backgroundValue) {
+        collage_main_fl_container.changeBackgroundColor(isTypeColor, backgroundValue);
     }
 
     @Override

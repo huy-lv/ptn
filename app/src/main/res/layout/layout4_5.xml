@@ -22,12 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="8">
+        android:weightSum="10">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="7">
 
         </LinearLayout>
 
@@ -36,12 +36,12 @@
             android:layout_height="0dp"
             android:layout_weight="2"
             android:orientation="horizontal"
-            android:weightSum="8">
+            android:weightSum="10">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="5">
+                android:layout_weight="1">
 
             </LinearLayout>
 
@@ -60,26 +60,12 @@
                     android:scaleType="centerCrop"
                     android:src="@mipmap/plus" />
             </LinearLayout>
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:orientation="horizontal"
-            android:weightSum="8">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="5">
+                android:layout_weight="1">
 
             </LinearLayout>
 
@@ -98,7 +84,31 @@
                     android:scaleType="centerCrop"
                     android:src="@mipmap/plus" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/background4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@color/colorAccent">
+
+                <com.noah.photonext.custom.RectangleIV
+                    android:id="@+id/iv4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5px"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/plus" />
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>

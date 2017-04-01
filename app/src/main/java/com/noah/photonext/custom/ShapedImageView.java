@@ -93,6 +93,7 @@ public abstract class ShapedImageView extends android.support.v7.widget.AppCompa
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         buildPath(mPath,canvas.getWidth(),canvas.getHeight());
+//        Log.e("cxz","canvas "+canvas.getWidth()+" "+canvas.getHeight());
         canvas.drawPath(mPath, mPathPaint);
         if(showBorder) {
             buildBorderPath(mBorderPath,canvas.getWidth(),canvas.getHeight());

@@ -244,7 +244,7 @@ public class Utils {
         return noOfColumns;
     }
 
-    public static ArrayList<LayoutObject> createListt() {
+    public static ArrayList<LayoutObject> createLayoutList() {
         ArrayList<LayoutObject> layoutList = new ArrayList<>();
         layoutList.add(new LayoutObject(R.mipmap.f2s1, 2, 1, true));
         layoutList.add(new LayoutObject(R.mipmap.f2s2, 2, 2, true));

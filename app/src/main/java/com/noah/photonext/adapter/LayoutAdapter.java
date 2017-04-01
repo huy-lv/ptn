@@ -10,11 +10,13 @@ import android.widget.ImageView;
 
 import com.noah.photonext.R;
 import com.noah.photonext.activity.CollageActivity;
+import com.noah.photonext.custom.SquareLayout;
 import com.noah.photonext.model.LayoutObject;
 
 import java.util.ArrayList;
 
-import static com.noah.photonext.util.Utils.showT;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by huylv on 14-Mar-17.
@@ -42,19 +44,15 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.LayoutView
         final LayoutObject l = layoutArrayList.get(position);
         holder.item_layout_photo.setImageResource(l.imageId);
         holder.item_layout_photo.setColorFilter(l.selected ? ContextCompat.getColor(c, R.color.colorAccent) : Color.WHITE);
-        holder.item_layout_photo.setOnClickListener(new View.OnClickListener() {
+        holder.item_layout_sl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (position < 5 || position > 14) {
                     for (LayoutObject ll : layoutArrayList) {
                         ll.selected = false;
                     }
                     l.selected = true;
                     c.changeLayout(l.first, l.second, l.standard);
                     notifyDataSetChanged();
-                } else {
-                    showT(c, "Coming soon!");
-                }
             }
         });
     }
@@ -65,11 +63,14 @@ public class LayoutAdapter extends RecyclerView.Adapter<LayoutAdapter.LayoutView
     }
 
     class LayoutViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.item_layout_photo)
         ImageView item_layout_photo;
+        @BindView(R.id.item_layout_sl)
+        SquareLayout item_layout_sl;
 
         LayoutViewHolder(View itemView) {
             super(itemView);
-            item_layout_photo = (ImageView) itemView.findViewById(R.id.item_layout_photo);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

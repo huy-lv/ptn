@@ -29,7 +29,6 @@ import static com.noah.photonext.util.Utils.numOfPhoto;
 public class StandardLayout extends BaseLayout implements View.OnClickListener {
     CollageActivity context;
     int first, second;
-    private Touch touchListener;
 
     public StandardLayout(CollageActivity context, int first, int second) {
         super(context);
@@ -96,7 +95,7 @@ public class StandardLayout extends BaseLayout implements View.OnClickListener {
     @Override
     public void setImageForUnassignedView(int unassignedPos) {
         Picasso.with(context).load(PREPATH + Utils.currentPhotos.get(unassignedPos).sdcardPath).into(currentIVlist.get(unassignedPos));
-        currentIVlist.get(unassignedPos).setOnTouchListener(touchListener);
+        currentIVlist.get(unassignedPos).setOnTouchListener(new Touch(context));
     }
 
     public ArrayList<LinearLayout> getBackgroundList() {

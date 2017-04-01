@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 
 public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorVH> {
-    public ArrayList<String> colors;
+    public ArrayList<BackgroundValue> colors;
     CollageActivity context;
     boolean typeColor;
 
@@ -27,14 +27,20 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorVH> {
         context = c;
         colors = new ArrayList<>();
         if (typeColor) {
-            colors.add("#FFFFFF");
-            colors.add("#ffc0cb");
-            colors.add("#ffd700");
-            colors.add("#40e0d0");
-            colors.add("#0000ff");
-            colors.add("#ffa500");
-            colors.add("#ff0000");
-            colors.add("#000000");
+            colors.add(new BackgroundValue("#FFFFFF"));
+            colors.add(new BackgroundValue("#ffc0cb"));
+            colors.add(new BackgroundValue("#ffd700"));
+            colors.add(new BackgroundValue("#40e0d0"));
+            colors.add(new BackgroundValue("#0000ff"));
+            colors.add(new BackgroundValue("#ffa500"));
+            colors.add(new BackgroundValue("#ff0000"));
+            colors.add(new BackgroundValue("#000000"));
+            colors.add(new BackgroundValue(R.mipmap.ic_text_color));
+        } else {
+            for (int i = 0; i < 15; i++) {
+                int id = context.getResources().getIdentifier("rule_" + i, "mipmap", context.getPackageName());
+                colors.add(new BackgroundValue(id));
+            }
         }
     }
 
@@ -47,23 +53,18 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorVH> {
     @Override
     public void onBindViewHolder(final ColorVH holder, final int position) {
         if (typeColor) {
-            holder.iv.setBackgroundColor(Color.parseColor(colors.get(position)));
-            holder.iv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    context.changeBackground(new BackgroundValue(colors.get(position)));
-                }
-            });
+            if (position < colors.size() - 1)
+                holder.iv.setBackgroundColor(Color.parseColor(colors.get(position).color));
+            else holder.iv.setImageResource(R.mipmap.ic_text_color);
         } else {
-            final int id = context.getResources().getIdentifier("rule_" + position, "mipmap", context.getPackageName());
-            holder.iv.setImageResource(id);
-            holder.iv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    context.changeBackground(new BackgroundValue(id));
-                }
-            });
+            holder.iv.setImageResource(colors.get(position).imageId);
         }
+        holder.iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.changeBackground(typeColor, colors.get(position));
+            }
+        });
     }
 
     @Override

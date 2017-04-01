@@ -22,11 +22,6 @@ public class LoadPhotoTask extends AsyncTask<Void, Void, Void> {
         pb = p;
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        pb.setVisibility(View.VISIBLE);
-    }
 
     @Override
     protected Void doInBackground(Void... params) {
